@@ -1,3 +1,4 @@
+
 export interface Example {
   sentence: string;
   translation: string;
@@ -27,4 +28,5 @@ export interface QuizQuestion {
   correctAnswer: string;
   incorrectAnswers: string[];
   hint?: string;
+  explanation: string;
 }

@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { QuizQuestion } from '../types';
 import { generateQuizQuestion } from '../services/geminiService';
-import { Loader2, CheckCircle, XCircle, Trophy, RefreshCw, HelpCircle, ArrowRight } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, Trophy, RefreshCw, HelpCircle, ArrowRight, Lightbulb } from 'lucide-react';
 
 const QuizGame: React.FC = () => {
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
@@ -130,20 +131,43 @@ const QuizGame: React.FC = () => {
 
           {/* Feedback & Next Button */}
           {isAnswered && (
-            <div className={`mt-8 p-4 rounded-xl flex items-center justify-between animate-fade-in-up ${isCorrect ? 'bg-green-50 text-green-900' : 'bg-red-50 text-red-900'}`}>
-              <div className="font-semibold flex items-center gap-2">
-                {isCorrect ? (
-                  <>Richtig! Well done. 🎉</>
-                ) : (
-                  <>Not quite. The answer is <span className="font-bold">{question.correctAnswer}</span></>
-                )}
+            <div className={`mt-8 p-6 rounded-2xl animate-fade-in-up border ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
+              <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                <div className="flex-1">
+                  <div className={`font-bold text-xl mb-2 flex items-center gap-2 ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                    {isCorrect ? (
+                      <>
+                        <CheckCircle className="w-6 h-6" />
+                        Richtig! Excellent.
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-6 h-6" />
+                        Not quite.
+                      </>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2 text-slate-700">
+                    {!isCorrect && (
+                       <p className="text-lg">The correct answer is <span className="font-bold text-slate-900">{question.correctAnswer}</span>.</p>
+                    )}
+                    {question.explanation && (
+                      <div className="flex items-start gap-2 text-slate-600 bg-white/60 p-3 rounded-lg mt-2 text-sm">
+                        <Lightbulb className="w-4 h-4 mt-0.5 text-amber-500 flex-shrink-0" />
+                        <p>{question.explanation}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  onClick={loadQuestion}
+                  className="w-full md:w-auto px-8 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform active:scale-95"
+                >
+                  Next Word <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
-              <button
-                onClick={loadQuestion}
-                className="px-6 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors flex items-center gap-2"
-              >
-                Next <ArrowRight className="w-4 h-4" />
-              </button>
             </div>
           )}
 

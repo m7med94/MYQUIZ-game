@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { DictionaryEntry, QuizQuestion } from "../types";
 
@@ -41,9 +42,10 @@ const quizSchema: Schema = {
       items: { type: Type.STRING },
       description: "3 incorrect but plausible translations to serve as distractors."
     },
-    hint: { type: Type.STRING, description: "A helpful hint like gender or context (e.g., 'Noun, feminine' or 'Used in formal contexts')." }
+    hint: { type: Type.STRING, description: "A helpful hint like gender or context (e.g., 'Noun, feminine' or 'Used in formal contexts')." },
+    explanation: { type: Type.STRING, description: "A brief, 1-sentence explanation of why this is correct, or a short usage example context." }
   },
-  required: ["questionWord", "sourceLang", "correctAnswer", "incorrectAnswers"]
+  required: ["questionWord", "sourceLang", "correctAnswer", "incorrectAnswers", "explanation"]
 };
 
 export const lookupWord = async (query: string): Promise<DictionaryEntry> => {
@@ -81,7 +83,8 @@ export const generateQuizQuestion = async (): Promise<QuizQuestion> => {
       model: "gemini-2.5-flash",
       contents: `Generate a random vocabulary quiz question for a German-Arabic learner.
       Randomly choose between a German word (to translate to Arabic) or an Arabic word (to translate to German).
-      Select words suitable for A1, A2, or B1 levels.`,
+      Select words suitable for A1, A2, or B1 levels.
+      Include a brief explanation or context for the answer.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: quizSchema,
