@@ -11,18 +11,6 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Import Map for Google GenAI SDK -->
-    <script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://esm.run/@google/genai",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
-  }
-}
-</script>
-
     <style>
         body { font-family: 'Inter', sans-serif; }
         .font-arabic { font-family: 'Amiri', serif; }
@@ -43,6 +31,15 @@
             animation: spin 1s linear infinite;
         }
     </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+  }
+}
+</script>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-indigo-50/50 min-h-screen flex flex-col text-slate-900">
 
@@ -72,8 +69,8 @@
                 </div>
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Vocabulary Challenge</h2>
                 <p class="text-slate-600 mb-10 text-lg leading-relaxed">
-                    Test your knowledge with infinite AI-generated questions for German and Arabic. 
-                    <br/><span class="text-sm text-slate-400 mt-2 block font-medium">Levels A1 • A2 • B1</span>
+                    Test your knowledge with your personal dictionary.
+                    <br/><span class="text-sm text-slate-400 mt-2 block font-medium">German ↔ Arabic</span>
                 </p>
                 <button id="startBtn" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold rounded-2xl transition-all shadow-lg hover:shadow-indigo-200 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
                     <span>Start Quiz</span>
@@ -170,13 +167,104 @@
     <footer class="w-full border-t border-slate-200 bg-white py-6 mt-auto">
         <div class="max-w-2xl mx-auto px-4 text-center text-slate-400 text-sm flex flex-col sm:flex-row justify-between items-center gap-2">
             <p>&copy; <span id="year"></span> Al-Brücke.</p>
-            <p>Master German vocabulary with AI.</p>
+            <p>Master German vocabulary.</p>
         </div>
     </footer>
 
     <!-- Main Application Logic -->
-    <script type="module">
-        import { GoogleGenAI, Type } from "@google/genai";
+    <script>
+        // --- LOCAL DICTIONARY ---
+        const LOCAL_DICTIONARY = [
+            // Basics
+            { german: "das Buch", arabic: "الكتاب", hint: "Noun, Neuter (das)", explanation: "Used for reading." },
+            { german: "das Haus", arabic: "المنزل", hint: "Noun, Neuter (das)", explanation: "A building for human habitation." },
+            { german: "das Auto", arabic: "السيارة", hint: "Noun, Neuter (das)", explanation: "A road vehicle with four wheels." },
+            { german: "der Lehrer", arabic: "المعلم", hint: "Noun, Masculine (der)", explanation: "Someone who teaches in a school." },
+            { german: "das Wasser", arabic: "الماء", hint: "Noun, Neuter (das)", explanation: "Essential for life." },
+            { german: "das Brot", arabic: "الخبز", hint: "Noun, Neuter (das)", explanation: "Baked food made of flour." },
+            { german: "die Katze", arabic: "القطة", hint: "Noun, Feminine (die)", explanation: "A common household pet." },
+            { german: "der Hund", arabic: "الكلب", hint: "Noun, Masculine (der)", explanation: "Man's best friend." },
+            { german: "Guten Morgen", arabic: "صباح الخير", hint: "Greeting", explanation: "Used until about 11 AM." },
+            { german: "danke", arabic: "شكراً", hint: "Expression", explanation: "Used to express gratitude." },
+            { german: "Tschüss", arabic: "مع السلامة", hint: "Farewell", explanation: "Informal goodbye." },
+            { german: "rot", arabic: "أحمر", hint: "Color", explanation: "The color of fire or blood." },
+            { german: "blau", arabic: "أزرق", hint: "Color", explanation: "The color of the sky." },
+            { german: "schön", arabic: "جميل", hint: "Adjective", explanation: "Pleasing the senses." },
+            { german: "groß", arabic: "كبير", hint: "Adjective", explanation: "Of considerable size." },
+            { german: "klein", arabic: "صغير", hint: "Adjective", explanation: "Of small size." },
+
+            // Advanced User List
+            { german: "die Umsetzung", arabic: "التنفيذ", hint: "Noun, Feminine", explanation: "Implementation or realization of a plan." },
+            { german: "erfordern", arabic: "يتطلب", hint: "Verb", explanation: "To require or demand something." },
+            { german: "die Glättung", arabic: "التنعيم", hint: "Noun, Feminine", explanation: "Smoothing something out." },
+            { german: "die Wahrnehmung", arabic: "الإدراك", hint: "Noun, Feminine", explanation: "Perception or awareness." },
+            { german: "die Fortsetzung", arabic: "الاستمرار / التكملة", hint: "Noun, Feminine", explanation: "Continuation of something." },
+            { german: "die Abbildung", arabic: "الرسم التوضيحي", hint: "Noun, Feminine", explanation: "Illustration or figure." },
+            { german: "das Abbild", arabic: "الصورة", hint: "Noun, Neuter", explanation: "Image or reflection." },
+            { german: "der Vorsatz", arabic: "النية / القصد", hint: "Noun, Masculine", explanation: "Intent or resolution." },
+            { german: "der Geist", arabic: "الروح / الشبح", hint: "Noun, Masculine", explanation: "Ghost, spirit, or mind." },
+            { german: "zuweisen", arabic: "يعين / يخصص", hint: "Verb", explanation: "To assign something to someone." },
+            { german: "abblitzen", arabic: "يرفض", hint: "Verb (Informal)", explanation: "To get rejected or brushed off." },
+            { german: "gegenseitig", arabic: "متبادل / مشترك", hint: "Adjective", explanation: "Mutual or reciprocal." },
+            { german: "beliebig", arabic: "أي / عشوائي", hint: "Adjective", explanation: "Any or arbitrary." },
+            { german: "inkrementell", arabic: "تدريجي", hint: "Adjective", explanation: "Incremental." },
+            { german: "der Anschluss", arabic: "الاتصال", hint: "Noun, Masculine", explanation: "Connection or plug." },
+            { german: "außerhalb", arabic: "خارج", hint: "Preposition", explanation: "Outside of an area." },
+            { german: "sich verlassen auf", arabic: "يعتمد على", hint: "Verb", explanation: "To rely on someone." },
+            { german: "flüstern", arabic: "يهمس", hint: "Verb", explanation: "To whisper." },
+            { german: "bedeutsam", arabic: "مهم / ذو معنى", hint: "Adjective", explanation: "Significant or meaningful." },
+            { german: "ratsam", arabic: "مستحسن", hint: "Adjective", explanation: "Advisable." },
+            { german: "achtsam", arabic: "حذر / يقظ", hint: "Adjective", explanation: "Attentive or mindful." },
+            { german: "gewaltsam", arabic: "عنيف / بالقوة", hint: "Adjective", explanation: "Violent or by force." },
+            { german: "psychisch", arabic: "نفسي", hint: "Adjective", explanation: "Mental or psychological." },
+            { german: "schweigsam", arabic: "صامت / كتوم", hint: "Adjective", explanation: "Silent or taciturn." },
+            { german: "befassen", arabic: "يتعامل مع", hint: "Verb", explanation: "To deal with or attend to." },
+            { german: "machbar", arabic: "ممكن / مستطاع", hint: "Adjective", explanation: "Doable or feasible." },
+            { german: "ansprechbar", arabic: "متجاوب", hint: "Adjective", explanation: "Responsive or approachable." },
+            { german: "heilbar", arabic: "قابل للشفاء", hint: "Adjective", explanation: "Curable." },
+            { german: "das Bedürfnis", arabic: "الحاجة", hint: "Noun, Neuter", explanation: "Need or desire." },
+            { german: "die Lebensbedingungen", arabic: "الظروف المعيشية", hint: "Noun, Plural", explanation: "Living conditions." },
+            { german: "scheitern", arabic: "يفشل", hint: "Verb", explanation: "To fail." },
+            { german: "der Übergang", arabic: "العبور / الانتقال", hint: "Noun, Masculine", explanation: "Transition or crossing." },
+            { german: "der Selbstmord", arabic: "الانتحار", hint: "Noun, Masculine", explanation: "Suicide." },
+            { german: "der Riss", arabic: "الشق / الشرخ", hint: "Noun, Masculine", explanation: "Crack or tear." },
+            { german: "der Kreislauf", arabic: "الدورة الدموية", hint: "Noun, Masculine", explanation: "Circulation or cycle." },
+            { german: "auflösen", arabic: "يذوب / يحل", hint: "Verb", explanation: "To dissolve or solve." },
+            { german: "die Ankündigung", arabic: "الإعلان", hint: "Noun, Feminine", explanation: "Announcement." },
+            { german: "sich wenden an", arabic: "يتوجه إلى / يتواصل مع", hint: "Verb", explanation: "To contact or turn to someone." },
+            { german: "der Ausschuss", arabic: "الجنة", hint: "Noun, Masculine", explanation: "Committee." },
+            { german: "vertraut machen", arabic: "يتعرف على", hint: "Verb", explanation: "To familiarize oneself." },
+            { german: "die Verzerrung", arabic: "التشوه", hint: "Noun, Feminine", explanation: "Distortion." },
+            { german: "durchführen", arabic: "ينفذ", hint: "Verb", explanation: "To carry out or execute." },
+            { german: "die Ziffer", arabic: "الرقم / الخانة", hint: "Noun, Feminine", explanation: "Digit." },
+            { german: "abheben", arabic: "يسحب (مال)", hint: "Verb", explanation: "To withdraw money or lift off." },
+            { german: "sich anfreunden", arabic: "يصادق", hint: "Verb", explanation: "To make friends." },
+            { german: "sich beschweren", arabic: "يشتكي", hint: "Verb", explanation: "To complain." },
+            { german: "sich entschuldigen", arabic: "يعتذر", hint: "Verb", explanation: "To apologize." },
+            { german: "gratulieren", arabic: "يهنئ", hint: "Verb", explanation: "To congratulate." },
+            { german: "sich verteidigen", arabic: "يدافع عن نفسه", hint: "Verb", explanation: "To defend oneself." },
+            { german: "die Anschuldigung", arabic: "الاتهام", hint: "Noun, Feminine", explanation: "Accusation." },
+            { german: "beschuldigen", arabic: "يتهم", hint: "Verb", explanation: "To accuse someone." },
+            { german: "widerlich", arabic: "مقرف", hint: "Adjective", explanation: "Disgusting or repulsive." },
+            { german: "das Guthaben", arabic: "الرصيد", hint: "Noun, Neuter", explanation: "Credit or balance." },
+            { german: "auftauen", arabic: "يذوب", hint: "Verb", explanation: "To thaw or defrost." },
+            { german: "der Griff", arabic: "القبضة / المقبض", hint: "Noun, Masculine", explanation: "Grip or handle." },
+            { german: "unumgänglich", arabic: "حتمي / لا مفر منه", hint: "Adjective", explanation: "Inevitable." },
+            { german: "der Verstoß", arabic: "المخالفة", hint: "Noun, Masculine", explanation: "Violation or breach." },
+            { german: "die Verteilung", arabic: "التوزيع", hint: "Noun, Feminine", explanation: "Distribution." },
+            { german: "zwangsläufig", arabic: "حتمي", hint: "Adjective", explanation: "Inevitably." },
+            { german: "der Aufbau", arabic: "البناء / التركيب", hint: "Noun, Masculine", explanation: "Construction or structure." },
+            { german: "vernachlässigen", arabic: "يهمل", hint: "Verb", explanation: "To neglect." },
+            { german: "schüchtern", arabic: "خجول", hint: "Adjective", explanation: "Shy." },
+            { german: "rückwirkend", arabic: "بأثر رجعي", hint: "Adjective", explanation: "Retroactive." },
+            { german: "der Rückstand", arabic: "المتأخرات / التأخير", hint: "Noun, Masculine", explanation: "Backlog or arrears." },
+            { german: "die Belastung", arabic: "العبء", hint: "Noun, Feminine", explanation: "Burden or load." },
+            { german: "schimpfen", arabic: "يوبخ / يشتم", hint: "Verb", explanation: "To scold or rant." },
+            { german: "ständig", arabic: "بشكل مستمر", hint: "Adjective", explanation: "Constant." },
+            { german: "zocken", arabic: "يلعب / يقامر", hint: "Verb (Slang)", explanation: "To gamble or play video games." },
+            { german: "gehorchen", arabic: "يطيع", hint: "Verb", explanation: "To obey." },
+            { german: "der Reißverschluss", arabic: "السحاب", hint: "Noun, Masculine", explanation: "Zipper." }
+        ];
 
         // --- State Management ---
         const state = {
@@ -186,8 +274,6 @@
             isAnswered: false,
             isLoading: false
         };
-
-        let aiClient = null;
 
         // --- DOM Elements ---
         const els = {
@@ -217,67 +303,63 @@
 
         // --- Initialization ---
         function init() {
-            // Wait for start button click to begin session
             els.startBtn.addEventListener('click', handleStart);
             els.nextBtn.addEventListener('click', loadQuestion);
             els.skipBtn.addEventListener('click', loadQuestion);
         }
 
         function handleStart() {
-            // Hide Start Screen with animation
             els.startScreen.classList.add('hidden');
-            
-            // Show Game Container
             els.gameContainer.classList.remove('hidden');
             els.gameContainer.classList.add('animate-fade-in-up');
-            
-            startSession();
-        }
-
-        function startSession() {
-            // Using process.env.API_KEY as per instructions
-            aiClient = new GoogleGenAI({ apiKey: process.env.API_KEY });
             loadQuestion();
         }
 
-        // --- Gemini Service ---
-        const quizSchema = {
-            type: Type.OBJECT,
-            properties: {
-                questionWord: { type: Type.STRING, description: "A random A1-B2 level word to test." },
-                sourceLang: { type: Type.STRING, enum: ["German", "Arabic"] },
-                correctAnswer: { type: Type.STRING, description: "The correct translation." },
-                incorrectAnswers: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING },
-                    description: "3 incorrect but plausible translations to serve as distractors."
-                },
-                hint: { type: Type.STRING, description: "A helpful hint like gender or context." },
-                explanation: { type: Type.STRING, description: "A brief, 1-sentence explanation or usage example." }
-            },
-            required: ["questionWord", "sourceLang", "correctAnswer", "incorrectAnswers", "explanation"]
-        };
-
+        // --- Logic: Local Generator ---
         async function fetchQuestion() {
-            try {
-                const response = await aiClient.models.generateContent({
-                    model: "gemini-2.5-flash",
-                    contents: `Generate a random vocabulary quiz question for a German-Arabic learner.
-                    Randomly choose between a German word (to translate to Arabic) or an Arabic word (to translate to German).
-                    Select words suitable for A1, A2, or B1 levels.
-                    Include a brief explanation or context for the answer.`,
-                    config: {
-                        responseMimeType: "application/json",
-                        responseSchema: quizSchema,
-                        systemInstruction: "You are a language tutor. Incorrect answers must be in the same language as the correct answer. German words must include article.",
-                    },
-                });
-                return JSON.parse(response.text);
-            } catch (error) {
-                console.error("API Error", error);
-                alert("Failed to fetch question. Check your internet connection.");
+            // Simulate a tiny delay for better UX (so it doesn't feel glitchy)
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            if (LOCAL_DICTIONARY.length < 4) {
+                alert("Dictionary needs at least 4 words.");
                 return null;
             }
+
+            // 1. Pick a random word
+            const targetIndex = Math.floor(Math.random() * LOCAL_DICTIONARY.length);
+            const targetWord = LOCAL_DICTIONARY[targetIndex];
+
+            // 2. Decide direction: German->Arabic (50%) or Arabic->German (50%)
+            const isSourceGerman = Math.random() > 0.5;
+            
+            const questionWord = isSourceGerman ? targetWord.german : targetWord.arabic;
+            const correctAnswer = isSourceGerman ? targetWord.arabic : targetWord.german;
+            const sourceLang = isSourceGerman ? "German" : "Arabic";
+
+            // 3. Generate 3 incorrect answers
+            const incorrectAnswers = [];
+            const usedIndices = new Set([targetIndex]);
+
+            while (incorrectAnswers.length < 3) {
+                const randIndex = Math.floor(Math.random() * LOCAL_DICTIONARY.length);
+                if (!usedIndices.has(randIndex)) {
+                    const wrongEntry = LOCAL_DICTIONARY[randIndex];
+                    // Incorrect answer must be in the SAME language as the correct answer
+                    const wrongWord = isSourceGerman ? wrongEntry.arabic : wrongEntry.german;
+                    
+                    incorrectAnswers.push(wrongWord);
+                    usedIndices.add(randIndex);
+                }
+            }
+
+            return {
+                questionWord,
+                sourceLang,
+                correctAnswer,
+                incorrectAnswers,
+                hint: targetWord.hint,
+                explanation: targetWord.explanation
+            };
         }
 
         // --- Game Logic ---
