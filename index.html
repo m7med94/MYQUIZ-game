@@ -58,27 +58,14 @@
                     Al-Brücke <span class="text-indigo-600 font-arabic font-normal text-xl ml-1">الجسر</span>
                 </h1>
             </div>
-            
-            <!-- API Key Trigger (Hidden by default logic, but useful if needed) -->
-            <button id="apiKeyBtn" class="text-xs text-slate-400 hover:text-indigo-600 underline">Settings</button>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-2xl mx-auto px-4 py-8 flex-grow w-full flex flex-col items-center">
         
-        <!-- API Key Modal (Shown if no key) -->
-        <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
-                <h2 class="text-xl font-bold mb-4">Enter Google API Key</h2>
-                <p class="text-slate-500 text-sm mb-4">Your key is stored locally in your browser. It is never sent to our servers.</p>
-                <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full p-3 border border-slate-300 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 outline-none">
-                <button id="saveKeyBtn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">Start Quiz</button>
-            </div>
-        </div>
-
         <!-- Game Container -->
-        <div id="gameContainer" class="w-full hidden">
+        <div id="gameContainer" class="w-full">
             
             <!-- Score Board -->
             <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
@@ -175,7 +162,6 @@
 
         // --- State Management ---
         const state = {
-            apiKey: localStorage.getItem('gemini_api_key') || '',
             score: 0,
             streak: 0,
             currentQuestion: null,
@@ -187,9 +173,6 @@
 
         // --- DOM Elements ---
         const els = {
-            apiKeyModal: document.getElementById('apiKeyModal'),
-            apiKeyInput: document.getElementById('apiKeyInput'),
-            saveKeyBtn: document.getElementById('saveKeyBtn'),
             gameContainer: document.getElementById('gameContainer'),
             loadingState: document.getElementById('loadingState'),
             questionCard: document.getElementById('questionCard'),
@@ -207,41 +190,21 @@
             skipBtn: document.getElementById('skipBtn'),
             scoreDisplay: document.getElementById('scoreDisplay'),
             streakDisplay: document.getElementById('streakDisplay'),
-            year: document.getElementById('year'),
-            apiKeyBtn: document.getElementById('apiKeyBtn')
+            year: document.getElementById('year')
         };
 
         els.year.textContent = new Date().getFullYear();
 
         // --- Initialization ---
         function init() {
-            if (!state.apiKey) {
-                els.apiKeyModal.classList.remove('hidden');
-            } else {
-                startSession();
-            }
-
-            els.saveKeyBtn.addEventListener('click', () => {
-                const key = els.apiKeyInput.value.trim();
-                if (key) {
-                    state.apiKey = key;
-                    localStorage.setItem('gemini_api_key', key);
-                    els.apiKeyModal.classList.add('hidden');
-                    startSession();
-                }
-            });
-
-            els.apiKeyBtn.addEventListener('click', () => {
-                els.apiKeyModal.classList.remove('hidden');
-            });
-
+            startSession();
             els.nextBtn.addEventListener('click', loadQuestion);
             els.skipBtn.addEventListener('click', loadQuestion);
         }
 
         function startSession() {
-            aiClient = new GoogleGenAI({ apiKey: state.apiKey });
-            els.gameContainer.classList.remove('hidden');
+            // Using process.env.API_KEY as per instructions
+            aiClient = new GoogleGenAI({ apiKey: process.env.API_KEY });
             loadQuestion();
         }
 
@@ -280,7 +243,7 @@
                 return JSON.parse(response.text);
             } catch (error) {
                 console.error("API Error", error);
-                alert("Failed to fetch question. Check your API Key or internet connection.");
+                alert("Failed to fetch question. Check your internet connection.");
                 return null;
             }
         }
