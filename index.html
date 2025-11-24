@@ -1,32 +1,418 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Al-Brücke | German-Arabic Dictionary</title>
+    <title>Al-Brücke | German-Arabic Quiz</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-      .font-arabic {
-        font-family: 'Amiri', serif;
-      }
-    </style>
-  <script type="importmap">
+    
+    <!-- Import Map for Google GenAI SDK -->
+    <script type="importmap">
 {
   "imports": {
+    "@google/genai": "https://esm.run/@google/genai",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-arabic { font-family: 'Amiri', serif; }
+        
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-custom {
+            animation: spin 1s linear infinite;
+        }
+    </style>
 </head>
-  <body class="bg-slate-50 text-slate-900 min-h-screen">
-    <div id="root"></div>
-  </body>
+<body class="bg-gradient-to-br from-slate-50 to-indigo-50/50 min-h-screen flex flex-col text-slate-900">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20">
+        <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white">
+                    <!-- Gamepad Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="17.5" y1="12" y2="12"/><line x1="16.25" x2="16.25" y1="10.75" y2="13.25"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
+                    Al-Brücke <span class="text-indigo-600 font-arabic font-normal text-xl ml-1">الجسر</span>
+                </h1>
+            </div>
+            
+            <!-- API Key Trigger (Hidden by default logic, but useful if needed) -->
+            <button id="apiKeyBtn" class="text-xs text-slate-400 hover:text-indigo-600 underline">Settings</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-4 py-8 flex-grow w-full flex flex-col items-center">
+        
+        <!-- API Key Modal (Shown if no key) -->
+        <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+                <h2 class="text-xl font-bold mb-4">Enter Google API Key</h2>
+                <p class="text-slate-500 text-sm mb-4">Your key is stored locally in your browser. It is never sent to our servers.</p>
+                <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full p-3 border border-slate-300 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-500 outline-none">
+                <button id="saveKeyBtn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">Start Quiz</button>
+            </div>
+        </div>
+
+        <!-- Game Container -->
+        <div id="gameContainer" class="w-full hidden">
+            
+            <!-- Score Board -->
+            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center gap-2 text-amber-500 font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                    <span id="scoreDisplay">Score: 0</span>
+                </div>
+                <div class="flex items-center gap-2 text-indigo-600 font-medium text-sm">
+                    <span id="streakDisplay">Streak: 0 🔥</span>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="hidden flex-col items-center justify-center min-h-[400px] text-slate-400">
+                <svg class="w-10 h-10 animate-spin-custom mb-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                <p>Preparing your next challenge...</p>
+            </div>
+
+            <!-- Question Card -->
+            <div id="questionCard" class="hidden bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 relative">
+                
+                <!-- Card Header (Gradient) -->
+                <div class="bg-gradient-to-br from-indigo-600 to-violet-700 p-10 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_50%_120%,#fff_0%,transparent_50%)]"></div>
+                    
+                    <span id="langBadge" class="inline-block px-3 py-1 bg-white/20 text-white text-xs font-semibold rounded-full backdrop-blur-sm mb-4">
+                        Translate this word
+                    </span>
+                    
+                    <h2 id="questionWord" class="text-4xl md:text-5xl font-bold text-white mb-6 transition-all duration-300">
+                        ...
+                    </h2>
+
+                    <div id="hintContainer" class="hidden items-center justify-center gap-2 text-indigo-100 text-sm opacity-80">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        <span id="hintText"></span>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-8">
+                    <!-- Options Grid -->
+                    <div id="optionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Options injected via JS -->
+                    </div>
+
+                    <!-- Feedback Section -->
+                    <div id="feedbackSection" class="hidden mt-8 p-6 rounded-2xl animate-fade-in-up border">
+                        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                            <div class="flex-1">
+                                <div id="feedbackTitle" class="font-bold text-xl mb-2 flex items-center gap-2">
+                                    <!-- Icon + Text -->
+                                </div>
+                                
+                                <div class="space-y-2 text-slate-700">
+                                    <p id="correctAnswerText" class="text-lg hidden">The correct answer is <span class="font-bold text-slate-900" id="correctAnswerSpan"></span>.</p>
+                                    
+                                    <div id="explanationBox" class="flex items-start gap-2 text-slate-600 bg-white/60 p-3 rounded-lg mt-2 text-sm">
+                                        <svg class="w-4 h-4 mt-0.5 text-amber-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                                        <p id="explanationText"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button id="nextBtn" class="w-full md:w-auto px-8 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform active:scale-95">
+                                Next Word 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skip Button -->
+            <div class="text-center mt-6">
+                <button id="skipBtn" class="text-slate-400 hover:text-indigo-600 text-sm font-medium flex items-center justify-center gap-1 mx-auto transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                    Skip Question
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full border-t border-slate-200 bg-white py-6 mt-auto">
+        <div class="max-w-2xl mx-auto px-4 text-center text-slate-400 text-sm flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>&copy; <span id="year"></span> Al-Brücke.</p>
+            <p>Master German vocabulary with AI.</p>
+        </div>
+    </footer>
+
+    <!-- Main Application Logic -->
+    <script type="module">
+        import { GoogleGenAI, Type } from "@google/genai";
+
+        // --- State Management ---
+        const state = {
+            apiKey: localStorage.getItem('gemini_api_key') || '',
+            score: 0,
+            streak: 0,
+            currentQuestion: null,
+            isAnswered: false,
+            isLoading: false
+        };
+
+        let aiClient = null;
+
+        // --- DOM Elements ---
+        const els = {
+            apiKeyModal: document.getElementById('apiKeyModal'),
+            apiKeyInput: document.getElementById('apiKeyInput'),
+            saveKeyBtn: document.getElementById('saveKeyBtn'),
+            gameContainer: document.getElementById('gameContainer'),
+            loadingState: document.getElementById('loadingState'),
+            questionCard: document.getElementById('questionCard'),
+            questionWord: document.getElementById('questionWord'),
+            langBadge: document.getElementById('langBadge'),
+            hintContainer: document.getElementById('hintContainer'),
+            hintText: document.getElementById('hintText'),
+            optionsGrid: document.getElementById('optionsGrid'),
+            feedbackSection: document.getElementById('feedbackSection'),
+            feedbackTitle: document.getElementById('feedbackTitle'),
+            correctAnswerText: document.getElementById('correctAnswerText'),
+            correctAnswerSpan: document.getElementById('correctAnswerSpan'),
+            explanationText: document.getElementById('explanationText'),
+            nextBtn: document.getElementById('nextBtn'),
+            skipBtn: document.getElementById('skipBtn'),
+            scoreDisplay: document.getElementById('scoreDisplay'),
+            streakDisplay: document.getElementById('streakDisplay'),
+            year: document.getElementById('year'),
+            apiKeyBtn: document.getElementById('apiKeyBtn')
+        };
+
+        els.year.textContent = new Date().getFullYear();
+
+        // --- Initialization ---
+        function init() {
+            if (!state.apiKey) {
+                els.apiKeyModal.classList.remove('hidden');
+            } else {
+                startSession();
+            }
+
+            els.saveKeyBtn.addEventListener('click', () => {
+                const key = els.apiKeyInput.value.trim();
+                if (key) {
+                    state.apiKey = key;
+                    localStorage.setItem('gemini_api_key', key);
+                    els.apiKeyModal.classList.add('hidden');
+                    startSession();
+                }
+            });
+
+            els.apiKeyBtn.addEventListener('click', () => {
+                els.apiKeyModal.classList.remove('hidden');
+            });
+
+            els.nextBtn.addEventListener('click', loadQuestion);
+            els.skipBtn.addEventListener('click', loadQuestion);
+        }
+
+        function startSession() {
+            aiClient = new GoogleGenAI({ apiKey: state.apiKey });
+            els.gameContainer.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // --- Gemini Service ---
+        const quizSchema = {
+            type: Type.OBJECT,
+            properties: {
+                questionWord: { type: Type.STRING, description: "A random A1-B2 level word to test." },
+                sourceLang: { type: Type.STRING, enum: ["German", "Arabic"] },
+                correctAnswer: { type: Type.STRING, description: "The correct translation." },
+                incorrectAnswers: {
+                    type: Type.ARRAY,
+                    items: { type: Type.STRING },
+                    description: "3 incorrect but plausible translations to serve as distractors."
+                },
+                hint: { type: Type.STRING, description: "A helpful hint like gender or context." },
+                explanation: { type: Type.STRING, description: "A brief, 1-sentence explanation or usage example." }
+            },
+            required: ["questionWord", "sourceLang", "correctAnswer", "incorrectAnswers", "explanation"]
+        };
+
+        async function fetchQuestion() {
+            try {
+                const response = await aiClient.models.generateContent({
+                    model: "gemini-2.5-flash",
+                    contents: `Generate a random vocabulary quiz question for a German-Arabic learner.
+                    Randomly choose between a German word (to translate to Arabic) or an Arabic word (to translate to German).
+                    Select words suitable for A1, A2, or B1 levels.
+                    Include a brief explanation or context for the answer.`,
+                    config: {
+                        responseMimeType: "application/json",
+                        responseSchema: quizSchema,
+                        systemInstruction: "You are a language tutor. Incorrect answers must be in the same language as the correct answer. German words must include article.",
+                    },
+                });
+                return JSON.parse(response.text);
+            } catch (error) {
+                console.error("API Error", error);
+                alert("Failed to fetch question. Check your API Key or internet connection.");
+                return null;
+            }
+        }
+
+        // --- Game Logic ---
+        async function loadQuestion() {
+            if (state.isLoading) return;
+            
+            setLoading(true);
+            state.isAnswered = false;
+            
+            // UI Reset
+            els.feedbackSection.classList.add('hidden');
+            els.questionCard.classList.add('hidden');
+            els.loadingState.classList.remove('hidden');
+            els.loadingState.style.display = 'flex';
+
+            const data = await fetchQuestion();
+            
+            if (data) {
+                state.currentQuestion = data;
+                renderQuestion(data);
+            }
+            
+            setLoading(false);
+        }
+
+        function setLoading(loading) {
+            state.isLoading = loading;
+            els.skipBtn.disabled = loading;
+        }
+
+        function renderQuestion(q) {
+            els.loadingState.classList.add('hidden');
+            els.loadingState.style.display = 'none';
+            els.questionCard.classList.remove('hidden');
+
+            // Header
+            els.langBadge.textContent = `Translate this ${q.sourceLang} word`;
+            els.questionWord.textContent = q.questionWord;
+            els.questionWord.className = `text-4xl md:text-5xl font-bold text-white mb-6 transition-all duration-300 ${q.sourceLang === 'Arabic' ? 'font-arabic' : ''}`;
+            
+            // Hint
+            if (q.hint) {
+                els.hintContainer.classList.remove('hidden');
+                els.hintContainer.style.display = 'flex';
+                els.hintText.textContent = q.hint;
+            } else {
+                els.hintContainer.classList.add('hidden');
+            }
+
+            // Options Shuffle
+            const allOptions = [...q.incorrectAnswers, q.correctAnswer];
+            for (let i = allOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allOptions[i], allOptions[j]] = [allOptions[j], allOptions[i]];
+            }
+
+            // Render Buttons
+            els.optionsGrid.innerHTML = '';
+            allOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = `p-6 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex items-center justify-between group bg-slate-50 border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50 ${q.sourceLang === 'German' ? 'font-arabic' : ''}`;
+                btn.innerHTML = `<span>${opt}</span>`;
+                btn.onclick = () => handleAnswer(opt, btn);
+                els.optionsGrid.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedOpt, btnElement) {
+            if (state.isAnswered) return;
+            state.isAnswered = true;
+
+            const isCorrect = selectedOpt === state.currentQuestion.correctAnswer;
+
+            // Update Score
+            if (isCorrect) {
+                state.score += 10;
+                state.streak += 1;
+            } else {
+                state.streak = 0;
+            }
+            els.scoreDisplay.textContent = `Score: ${state.score}`;
+            els.streakDisplay.textContent = `Streak: ${state.streak} 🔥`;
+
+            // Visual Feedback on Buttons
+            const buttons = els.optionsGrid.querySelectorAll('button');
+            buttons.forEach(btn => {
+                const optText = btn.querySelector('span').textContent;
+                btn.disabled = true;
+                btn.classList.remove('hover:border-indigo-300', 'hover:bg-indigo-50');
+
+                if (optText === state.currentQuestion.correctAnswer) {
+                    // Correct Style
+                    btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'ring-1', 'ring-green-500');
+                    btn.innerHTML += `<svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                } else if (optText === selectedOpt && !isCorrect) {
+                    // Wrong Style
+                    btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800', 'ring-1', 'ring-red-500');
+                    btn.innerHTML += `<svg class="w-5 h-5 text-red-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>`;
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            // Show Feedback Section
+            els.feedbackSection.classList.remove('hidden');
+            els.feedbackSection.className = `mt-8 p-6 rounded-2xl animate-fade-in-up border ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`;
+            
+            // Feedback Title
+            els.feedbackTitle.className = `font-bold text-xl mb-2 flex items-center gap-2 ${isCorrect ? 'text-green-700' : 'text-red-700'}`;
+            els.feedbackTitle.innerHTML = isCorrect 
+                ? `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Richtig! Excellent.`
+                : `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg> Not quite.`;
+
+            // Correction Text
+            if (!isCorrect) {
+                els.correctAnswerText.classList.remove('hidden');
+                els.correctAnswerSpan.textContent = state.currentQuestion.correctAnswer;
+            } else {
+                els.correctAnswerText.classList.add('hidden');
+            }
+
+            // Explanation
+            if (state.currentQuestion.explanation) {
+                els.explanationText.textContent = state.currentQuestion.explanation;
+            }
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
 </html>

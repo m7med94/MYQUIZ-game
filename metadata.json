@@ -1,5 +1,5 @@
 {
-  "name": "Al-Brücke Dictionary",
-  "description": "A smart German-Arabic dictionary helper powered by AI to assist language learners with definitions, gender, plurals, and context examples.",
+  "name": "Al-Brücke Quiz",
+  "description": "A smart German-Arabic vocabulary quiz game powered by AI to help learners master new words.",
   "requestFramePermissions": []
 }
