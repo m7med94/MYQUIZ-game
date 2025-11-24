@@ -1,5 +1,5 @@
 {
   "name": "Al-Brücke Quiz",
-  "description": "A smart German-Arabic vocabulary quiz game powered by AI to help learners master new words.",
+  "description": "A German-Arabic vocabulary quiz game using a local personal dictionary.",
   "requestFramePermissions": []
 }
