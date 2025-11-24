@@ -34,47 +34,48 @@
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-indigo-50/50 min-h-screen flex flex-col text-slate-900">
 
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20">
-        <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 p-2 rounded-lg text-white">
-                    <!-- Gamepad Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="17.5" y1="12" y2="12"/><line x1="16.25" x2="16.25" y1="10.75" y2="13.25"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+    <!-- Header (Compact) -->
+    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20 h-12 flex items-center">
+        <div class="max-w-2xl mx-auto px-4 w-full flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-indigo-600 p-1 rounded-md text-white">
+                    <!-- Gamepad Icon (Smaller) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="17.5" y1="12" y2="12"/><line x1="16.25" x2="16.25" y1="10.75" y2="13.25"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
                 </div>
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
-                    Al-Brücke <span class="text-indigo-600 font-arabic font-normal text-xl ml-1">الجسر</span>
+                <h1 class="text-base font-bold text-slate-800 tracking-tight flex items-baseline">
+                    Al-Brücke <span class="text-indigo-600 font-arabic font-normal text-base ml-1">الجسر</span>
                 </h1>
             </div>
+            <div class="text-xs text-slate-400 font-medium">Native Mode</div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-2xl mx-auto px-4 py-8 flex-grow w-full flex flex-col items-center">
+    <main class="max-w-2xl mx-auto px-4 py-6 flex-grow w-full flex flex-col items-center justify-center">
         
         <!-- Start Screen -->
-        <div id="startScreen" class="w-full max-w-lg animate-fade-in-up my-auto">
-            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12 text-center">
-                <div class="inline-flex items-center justify-center w-24 h-24 bg-indigo-50 rounded-full text-indigo-600 mb-8 ring-8 ring-indigo-50/50">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <div id="startScreen" class="w-full max-w-lg animate-fade-in-up">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-10 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-50 rounded-full text-indigo-600 mb-6 ring-8 ring-indigo-50/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 </div>
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">Vocabulary Challenge</h2>
-                <p class="text-slate-600 mb-10 text-lg leading-relaxed">
+                <h2 class="text-2xl font-bold text-slate-900 mb-3">Vocabulary Challenge</h2>
+                <p class="text-slate-600 mb-8 text-base leading-relaxed">
                     Test your knowledge with your personal dictionary.
-                    <br/><span class="text-sm text-slate-400 mt-2 block font-medium">German ↔ Arabic</span>
+                    <br/><span class="text-sm text-slate-400 mt-2 block font-medium">German → Arabic</span>
                 </p>
-                <button id="startBtn" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold rounded-2xl transition-all shadow-lg hover:shadow-indigo-200 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
+                <button id="startBtn" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-2xl transition-all shadow-lg hover:shadow-indigo-200 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
                     <span>Start Quiz</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </button>
             </div>
         </div>
@@ -83,71 +84,76 @@
         <div id="gameContainer" class="w-full hidden">
             
             <!-- Score Board -->
-            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                <div class="flex items-center gap-2 text-amber-500 font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <div class="flex justify-between items-center mb-4 bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center gap-2 text-amber-500 font-bold text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
                     <span id="scoreDisplay">Score: 0</span>
                 </div>
-                <div class="flex items-center gap-2 text-indigo-600 font-medium text-sm">
+                <div class="flex items-center gap-2 text-indigo-600 font-medium text-xs">
                     <span id="streakDisplay">Streak: 0 🔥</span>
                 </div>
             </div>
 
             <!-- Loading State -->
-            <div id="loadingState" class="hidden flex-col items-center justify-center min-h-[400px] text-slate-400">
-                <svg class="w-10 h-10 animate-spin-custom mb-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                <p>Preparing your next challenge...</p>
+            <div id="loadingState" class="hidden flex-col items-center justify-center min-h-[300px] text-slate-400">
+                <svg class="w-8 h-8 animate-spin-custom mb-3 text-indigo-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                <p class="text-sm">Loading next word...</p>
             </div>
 
             <!-- Question Card -->
             <div id="questionCard" class="hidden bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 relative">
                 
                 <!-- Card Header (Gradient) -->
-                <div class="bg-gradient-to-br from-indigo-600 to-violet-700 p-10 text-center relative overflow-hidden">
+                <div class="bg-gradient-to-br from-indigo-600 to-violet-700 p-6 md:p-8 text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_50%_120%,#fff_0%,transparent_50%)]"></div>
                     
-                    <span id="langBadge" class="inline-block px-3 py-1 bg-white/20 text-white text-xs font-semibold rounded-full backdrop-blur-sm mb-4">
-                        Translate this word
+                    <span id="langBadge" class="inline-block px-2.5 py-0.5 bg-white/20 text-white text-[10px] uppercase tracking-wider font-bold rounded-full backdrop-blur-sm mb-3">
+                        Translate to Arabic
                     </span>
                     
-                    <h2 id="questionWord" class="text-4xl md:text-5xl font-bold text-white mb-6 transition-all duration-300">
+                    <h2 id="questionWord" class="text-3xl md:text-4xl font-bold text-white mb-3 transition-all duration-300">
                         ...
                     </h2>
 
-                    <div id="hintContainer" class="hidden items-center justify-center gap-2 text-indigo-100 text-sm opacity-80">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                    <!-- Example Sentence -->
+                    <p id="questionExample" class="text-indigo-200 text-lg font-serif italic mb-4 opacity-90 min-h-[1.5em] px-4">
+                        
+                    </p>
+
+                    <div id="hintContainer" class="hidden items-center justify-center gap-1.5 text-indigo-100 text-xs opacity-80 bg-black/10 inline-flex px-3 py-1 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         <span id="hintText"></span>
                     </div>
                 </div>
 
                 <!-- Card Body -->
-                <div class="p-8">
+                <div class="p-5 md:p-6">
                     <!-- Options Grid -->
-                    <div id="optionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="optionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Options injected via JS -->
                     </div>
 
                     <!-- Feedback Section -->
-                    <div id="feedbackSection" class="hidden mt-8 p-6 rounded-2xl animate-fade-in-up border">
-                        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-                            <div class="flex-1">
-                                <div id="feedbackTitle" class="font-bold text-xl mb-2 flex items-center gap-2">
+                    <div id="feedbackSection" class="hidden mt-6 p-4 rounded-xl animate-fade-in-up border">
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <div id="feedbackTitle" class="font-bold text-lg mb-1 flex items-center gap-2">
                                     <!-- Icon + Text -->
                                 </div>
                                 
                                 <div class="space-y-2 text-slate-700">
-                                    <p id="correctAnswerText" class="text-lg hidden">The correct answer is <span class="font-bold text-slate-900" id="correctAnswerSpan"></span>.</p>
+                                    <p id="correctAnswerText" class="text-base hidden">The correct answer is <span class="font-bold text-slate-900 font-arabic text-lg" id="correctAnswerSpan"></span>.</p>
                                     
-                                    <div id="explanationBox" class="flex items-start gap-2 text-slate-600 bg-white/60 p-3 rounded-lg mt-2 text-sm">
+                                    <div id="explanationBox" class="flex items-start gap-2 text-slate-600 bg-white/60 p-2.5 rounded-lg mt-2 text-sm">
                                         <svg class="w-4 h-4 mt-0.5 text-amber-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                                         <p id="explanationText"></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <button id="nextBtn" class="w-full md:w-auto px-8 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform active:scale-95">
+                            <button id="nextBtn" class="w-full py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-95 text-sm">
                                 Next Word 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                             </button>
                         </div>
                     </div>
@@ -155,17 +161,17 @@
             </div>
 
             <!-- Skip Button -->
-            <div class="text-center mt-6">
-                <button id="skipBtn" class="text-slate-400 hover:text-indigo-600 text-sm font-medium flex items-center justify-center gap-1 mx-auto transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            <div class="text-center mt-4">
+                <button id="skipBtn" class="text-slate-400 hover:text-indigo-600 text-xs font-medium flex items-center justify-center gap-1 mx-auto transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
                     Skip Question
                 </button>
             </div>
         </div>
     </main>
 
-    <footer class="w-full border-t border-slate-200 bg-white py-6 mt-auto">
-        <div class="max-w-2xl mx-auto px-4 text-center text-slate-400 text-sm flex flex-col sm:flex-row justify-between items-center gap-2">
+    <footer class="w-full border-t border-slate-200 bg-white py-3 mt-auto">
+        <div class="max-w-2xl mx-auto px-4 text-center text-slate-400 text-[10px] flex flex-col sm:flex-row justify-between items-center gap-1">
             <p>&copy; <span id="year"></span> Al-Brücke.</p>
             <p>Master German vocabulary.</p>
         </div>
@@ -173,323 +179,333 @@
 
     <!-- Main Application Logic -->
     <script>
-        // --- LOCAL DICTIONARY ---
+        // --- LOCAL DICTIONARY WITH EXAMPLES ---
         const LOCAL_DICTIONARY = [
             // Basics
-            { german: "das Buch", arabic: "الكتاب", hint: "Noun, Neuter (das)", explanation: "Used for reading." },
-            { german: "das Haus", arabic: "المنزل", hint: "Noun, Neuter (das)", explanation: "A building for human habitation." },
-            { german: "das Auto", arabic: "السيارة", hint: "Noun, Neuter (das)", explanation: "A road vehicle with four wheels." },
-            { german: "der Lehrer", arabic: "المعلم", hint: "Noun, Masculine (der)", explanation: "Someone who teaches in a school." },
-            { german: "das Wasser", arabic: "الماء", hint: "Noun, Neuter (das)", explanation: "Essential for life." },
-            { german: "das Brot", arabic: "الخبز", hint: "Noun, Neuter (das)", explanation: "Baked food made of flour." },
-            { german: "die Katze", arabic: "القطة", hint: "Noun, Feminine (die)", explanation: "A common household pet." },
-            { german: "der Hund", arabic: "الكلب", hint: "Noun, Masculine (der)", explanation: "Man's best friend." },
-            { german: "Guten Morgen", arabic: "صباح الخير", hint: "Greeting", explanation: "Used until about 11 AM." },
-            { german: "danke", arabic: "شكراً", hint: "Expression", explanation: "Used to express gratitude." },
-            { german: "Tschüss", arabic: "مع السلامة", hint: "Farewell", explanation: "Informal goodbye." },
-            { german: "rot", arabic: "أحمر", hint: "Color", explanation: "The color of fire or blood." },
-            { german: "blau", arabic: "أزرق", hint: "Color", explanation: "The color of the sky." },
-            { german: "schön", arabic: "جميل", hint: "Adjective", explanation: "Pleasing the senses." },
-            { german: "groß", arabic: "كبير", hint: "Adjective", explanation: "Of considerable size." },
-            { german: "klein", arabic: "صغير", hint: "Adjective", explanation: "Of small size." },
-
-            // Advanced User List
-            { german: "die Umsetzung", arabic: "التنفيذ", hint: "Noun, Feminine", explanation: "Implementation or realization of a plan." },
-            { german: "erfordern", arabic: "يتطلب", hint: "Verb", explanation: "To require or demand something." },
-            { german: "die Glättung", arabic: "التنعيم", hint: "Noun, Feminine", explanation: "Smoothing something out." },
-            { german: "die Wahrnehmung", arabic: "الإدراك", hint: "Noun, Feminine", explanation: "Perception or awareness." },
-            { german: "die Fortsetzung", arabic: "الاستمرار / التكملة", hint: "Noun, Feminine", explanation: "Continuation of something." },
-            { german: "die Abbildung", arabic: "الرسم التوضيحي", hint: "Noun, Feminine", explanation: "Illustration or figure." },
-            { german: "das Abbild", arabic: "الصورة", hint: "Noun, Neuter", explanation: "Image or reflection." },
-            { german: "der Vorsatz", arabic: "النية / القصد", hint: "Noun, Masculine", explanation: "Intent or resolution." },
-            { german: "der Geist", arabic: "الروح / الشبح", hint: "Noun, Masculine", explanation: "Ghost, spirit, or mind." },
-            { german: "zuweisen", arabic: "يعين / يخصص", hint: "Verb", explanation: "To assign something to someone." },
-            { german: "abblitzen", arabic: "يرفض", hint: "Verb (Informal)", explanation: "To get rejected or brushed off." },
-            { german: "gegenseitig", arabic: "متبادل / مشترك", hint: "Adjective", explanation: "Mutual or reciprocal." },
-            { german: "beliebig", arabic: "أي / عشوائي", hint: "Adjective", explanation: "Any or arbitrary." },
-            { german: "inkrementell", arabic: "تدريجي", hint: "Adjective", explanation: "Incremental." },
-            { german: "der Anschluss", arabic: "الاتصال", hint: "Noun, Masculine", explanation: "Connection or plug." },
-            { german: "außerhalb", arabic: "خارج", hint: "Preposition", explanation: "Outside of an area." },
-            { german: "sich verlassen auf", arabic: "يعتمد على", hint: "Verb", explanation: "To rely on someone." },
-            { german: "flüstern", arabic: "يهمس", hint: "Verb", explanation: "To whisper." },
-            { german: "bedeutsam", arabic: "مهم / ذو معنى", hint: "Adjective", explanation: "Significant or meaningful." },
-            { german: "ratsam", arabic: "مستحسن", hint: "Adjective", explanation: "Advisable." },
-            { german: "achtsam", arabic: "حذر / يقظ", hint: "Adjective", explanation: "Attentive or mindful." },
-            { german: "gewaltsam", arabic: "عنيف / بالقوة", hint: "Adjective", explanation: "Violent or by force." },
-            { german: "psychisch", arabic: "نفسي", hint: "Adjective", explanation: "Mental or psychological." },
-            { german: "schweigsam", arabic: "صامت / كتوم", hint: "Adjective", explanation: "Silent or taciturn." },
-            { german: "befassen", arabic: "يتعامل مع", hint: "Verb", explanation: "To deal with or attend to." },
-            { german: "machbar", arabic: "ممكن / مستطاع", hint: "Adjective", explanation: "Doable or feasible." },
-            { german: "ansprechbar", arabic: "متجاوب", hint: "Adjective", explanation: "Responsive or approachable." },
-            { german: "heilbar", arabic: "قابل للشفاء", hint: "Adjective", explanation: "Curable." },
-            { german: "das Bedürfnis", arabic: "الحاجة", hint: "Noun, Neuter", explanation: "Need or desire." },
-            { german: "die Lebensbedingungen", arabic: "الظروف المعيشية", hint: "Noun, Plural", explanation: "Living conditions." },
-            { german: "scheitern", arabic: "يفشل", hint: "Verb", explanation: "To fail." },
-            { german: "der Übergang", arabic: "العبور / الانتقال", hint: "Noun, Masculine", explanation: "Transition or crossing." },
-            { german: "der Selbstmord", arabic: "الانتحار", hint: "Noun, Masculine", explanation: "Suicide." },
-            { german: "der Riss", arabic: "الشق / الشرخ", hint: "Noun, Masculine", explanation: "Crack or tear." },
-            { german: "der Kreislauf", arabic: "الدورة الدموية", hint: "Noun, Masculine", explanation: "Circulation or cycle." },
-            { german: "auflösen", arabic: "يذوب / يحل", hint: "Verb", explanation: "To dissolve or solve." },
-            { german: "die Ankündigung", arabic: "الإعلان", hint: "Noun, Feminine", explanation: "Announcement." },
-            { german: "sich wenden an", arabic: "يتوجه إلى / يتواصل مع", hint: "Verb", explanation: "To contact or turn to someone." },
-            { german: "der Ausschuss", arabic: "الجنة", hint: "Noun, Masculine", explanation: "Committee." },
-            { german: "vertraut machen", arabic: "يتعرف على", hint: "Verb", explanation: "To familiarize oneself." },
-            { german: "die Verzerrung", arabic: "التشوه", hint: "Noun, Feminine", explanation: "Distortion." },
-            { german: "durchführen", arabic: "ينفذ", hint: "Verb", explanation: "To carry out or execute." },
-            { german: "die Ziffer", arabic: "الرقم / الخانة", hint: "Noun, Feminine", explanation: "Digit." },
-            { german: "abheben", arabic: "يسحب (مال)", hint: "Verb", explanation: "To withdraw money or lift off." },
-            { german: "sich anfreunden", arabic: "يصادق", hint: "Verb", explanation: "To make friends." },
-            { german: "sich beschweren", arabic: "يشتكي", hint: "Verb", explanation: "To complain." },
-            { german: "sich entschuldigen", arabic: "يعتذر", hint: "Verb", explanation: "To apologize." },
-            { german: "gratulieren", arabic: "يهنئ", hint: "Verb", explanation: "To congratulate." },
-            { german: "sich verteidigen", arabic: "يدافع عن نفسه", hint: "Verb", explanation: "To defend oneself." },
-            { german: "die Anschuldigung", arabic: "الاتهام", hint: "Noun, Feminine", explanation: "Accusation." },
-            { german: "beschuldigen", arabic: "يتهم", hint: "Verb", explanation: "To accuse someone." },
-            { german: "widerlich", arabic: "مقرف", hint: "Adjective", explanation: "Disgusting or repulsive." },
-            { german: "das Guthaben", arabic: "الرصيد", hint: "Noun, Neuter", explanation: "Credit or balance." },
-            { german: "auftauen", arabic: "يذوب", hint: "Verb", explanation: "To thaw or defrost." },
-            { german: "der Griff", arabic: "القبضة / المقبض", hint: "Noun, Masculine", explanation: "Grip or handle." },
-            { german: "unumgänglich", arabic: "حتمي / لا مفر منه", hint: "Adjective", explanation: "Inevitable." },
-            { german: "der Verstoß", arabic: "المخالفة", hint: "Noun, Masculine", explanation: "Violation or breach." },
-            { german: "die Verteilung", arabic: "التوزيع", hint: "Noun, Feminine", explanation: "Distribution." },
-            { german: "zwangsläufig", arabic: "حتمي", hint: "Adjective", explanation: "Inevitably." },
-            { german: "der Aufbau", arabic: "البناء / التركيب", hint: "Noun, Masculine", explanation: "Construction or structure." },
-            { german: "vernachlässigen", arabic: "يهمل", hint: "Verb", explanation: "To neglect." },
-            { german: "schüchtern", arabic: "خجول", hint: "Adjective", explanation: "Shy." },
-            { german: "rückwirkend", arabic: "بأثر رجعي", hint: "Adjective", explanation: "Retroactive." },
-            { german: "der Rückstand", arabic: "المتأخرات / التأخير", hint: "Noun, Masculine", explanation: "Backlog or arrears." },
-            { german: "die Belastung", arabic: "العبء", hint: "Noun, Feminine", explanation: "Burden or load." },
-            { german: "schimpfen", arabic: "يوبخ / يشتم", hint: "Verb", explanation: "To scold or rant." },
-            { german: "ständig", arabic: "بشكل مستمر", hint: "Adjective", explanation: "Constant." },
-            { german: "zocken", arabic: "يلعب / يقامر", hint: "Verb (Slang)", explanation: "To gamble or play video games." },
-            { german: "gehorchen", arabic: "يطيع", hint: "Verb", explanation: "To obey." },
-            { german: "der Reißverschluss", arabic: "السحاب", hint: "Noun, Masculine", explanation: "Zipper." }
+            { german: "das Buch", arabic: "الكتاب", hint: "Noun, Neuter", explanation: "Something you read.", example: "Ich lese ein spannendes Buch." },
+            { german: "das Haus", arabic: "المنزل", hint: "Noun, Neuter", explanation: "A place where people live.", example: "Wir haben ein kleines Haus gekauft." },
+            { german: "der Lehrer", arabic: "المعلم", hint: "Noun, Masculine", explanation: "A person who teaches.", example: "Der Lehrer erklärt die Grammatik gut." },
+            { german: "das Wasser", arabic: "الماء", hint: "Noun, Neuter", explanation: "Essential liquid for life.", example: "Kann ich bitte ein Glas Wasser haben?" },
+            { german: "das Brot", arabic: "الخبز", hint: "Noun, Neuter", explanation: "Food made from flour.", example: "Frisches Brot riecht sehr gut." },
+            
+            // User List (Added)
+            { german: "die Beleuchtung", arabic: "الإضاءة", hint: "Noun, Feminine", explanation: "Lighting or illumination.", example: "Die Beleuchtung im Zimmer ist sehr hell." },
+            { german: "die Umsetzung", arabic: "التنفيذ", hint: "Noun, Feminine", explanation: "Implementation or execution.", example: "Die Umsetzung des Plans beginnt morgen." },
+            { german: "erfordern", arabic: "يتطلب", hint: "Verb", explanation: "To require or demand.", example: "Dieser Job erfordert viel Geduld." },
+            { german: "die Erfassung", arabic: "التقاط / تسجيل", hint: "Noun, Feminine", explanation: "Capture, recording or registration.", example: "Die Erfassung der Daten dauert lange." },
+            { german: "die Glättung", arabic: "التنعيم", hint: "Noun, Feminine", explanation: "Smoothing.", example: "Die Glättung der Oberfläche ist wichtig." },
+            { german: "die Wahrnehmung", arabic: "الإدراك", hint: "Noun, Feminine", explanation: "Perception or awareness.", example: "Seine Wahrnehmung der Realität ist anders." },
+            { german: "die Fortsetzung", arabic: "الاستمرار / التكملة", hint: "Noun, Feminine", explanation: "Continuation.", example: "Wir warten auf die Fortsetzung des Films." },
+            { german: "die Abbildung", arabic: "الرسم التوضيحي", hint: "Noun, Feminine", explanation: "Illustration or figure.", example: "Das Buch enthält viele Abbildungen." },
+            { german: "das Abbild", arabic: "الصورة / الانعكاس", hint: "Noun, Neuter", explanation: "Image or reflection.", example: "Er ist das genaue Abbild seines Vaters." },
+            { german: "die Zusammenfassung", arabic: "الملخص", hint: "Noun, Feminine", explanation: "Summary.", example: "Kannst du mir eine Zusammenfassung geben?" },
+            { german: "betreffen", arabic: "يتعلق بـ", hint: "Verb", explanation: "To concern or affect.", example: "Das betrifft uns alle." },
+            { german: "der Vorsatz", arabic: "النية / القصد", hint: "Noun, Masculine", explanation: "Intent or resolution.", example: "Ich habe einen guten Vorsatz für das neue Jahr." },
+            { german: "der Geist", arabic: "الروح / الشبح", hint: "Noun, Masculine", explanation: "Ghost, spirit or mind.", example: "In diesem Schloss gibt es einen Geist." },
+            { german: "das Eigentum", arabic: "الممتلكات", hint: "Noun, Neuter", explanation: "Property.", example: "Das ist mein privates Eigentum." },
+            { german: "zuweisen", arabic: "يعين / يخصص", hint: "Verb", explanation: "To assign.", example: "Der Lehrer wird uns Aufgaben zuweisen." },
+            { german: "abblitzen", arabic: "يرفض (عامية)", hint: "Verb (Informal)", explanation: "To get rejected or brushed off.", example: "Er ist bei ihr abgeblitzt." },
+            { german: "gegenseitig", arabic: "متبادل", hint: "Adjective", explanation: "Mutual.", example: "Sie helfen sich gegenseitig." },
+            { german: "beliebig", arabic: "أي / عشوائي", hint: "Adjective", explanation: "Any or arbitrary.", example: "Wähle eine beliebige Karte." },
+            { german: "inkrementell", arabic: "تدريجي", hint: "Adjective", explanation: "Incremental.", example: "Der Fortschritt erfolgt inkrementell." },
+            { german: "der Anschluss", arabic: "الاتصال", hint: "Noun, Masculine", explanation: "Connection.", example: "Ich habe den Anschluss verpasst." },
+            { german: "außerhalb", arabic: "خارج", hint: "Preposition", explanation: "Outside of.", example: "Wir wohnen außerhalb der Stadt." },
+            { german: "sich verlassen auf", arabic: "يعتمد على", hint: "Verb", explanation: "To rely on.", example: "Ich verlasse mich auf dich." },
+            { german: "auf alle Fälle", arabic: "في كل الأحوال", hint: "Expression", explanation: "In any case.", example: "Ich komme auf alle Fälle zur Party." },
+            { german: "flüstern", arabic: "يهمس", hint: "Verb", explanation: "To whisper.", example: "Sie flüsterte ihm etwas ins Ohr." },
+            { german: "bedeutsam", arabic: "مهم / ذو معنى", hint: "Adjective", explanation: "Significant.", example: "Das war ein bedeutsamer Moment." },
+            { german: "ratsam", arabic: "مستحسن", hint: "Adjective", explanation: "Advisable.", example: "Es ist ratsam, einen Arzt zu besuchen." },
+            { german: "achtsam", arabic: "حذر / يقظ", hint: "Adjective", explanation: "Mindful or attentive.", example: "Sei achtsam im Straßenverkehr." },
+            { german: "gewaltsam", arabic: "عنيف / بالقوة", hint: "Adjective", explanation: "Violent or by force.", example: "Sie öffneten die Tür gewaltsam." },
+            { german: "die Gewalt", arabic: "العنف", hint: "Noun, Feminine", explanation: "Violence.", example: "Gewalt ist keine Lösung." },
+            { german: "psychisch", arabic: "نفسي", hint: "Adjective", explanation: "Psychological.", example: "Der Stress ist eine psychische Belastung." },
+            { german: "das Gleichgewicht", arabic: "التوازن", hint: "Noun, Neuter", explanation: "Balance.", example: "Er verlor das Gleichgewicht." },
+            { german: "schweigsam", arabic: "صامت / كتوم", hint: "Adjective", explanation: "Silent.", example: "Er ist ein sehr schweigsamer Mensch." },
+            { german: "das Schweigen", arabic: "الصمت", hint: "Noun, Neuter", explanation: "Silence.", example: "Das Schweigen im Wald war angenehm." },
+            { german: "befassen", arabic: "يتعامل مع", hint: "Verb", explanation: "To deal with.", example: "Wir müssen uns mit diesem Problem befassen." },
+            { german: "machbar", arabic: "ممكن / مستطاع", hint: "Adjective", explanation: "Feasible or doable.", example: "Dieser Plan ist durchaus machbar." },
+            { german: "nachvollziehbar", arabic: "مفهوم / منطقي", hint: "Adjective", explanation: "Comprehensible.", example: "Seine Entscheidung war für mich nicht nachvollziehbar." },
+            { german: "das Verhalten", arabic: "السلوك", hint: "Noun, Neuter", explanation: "Behavior.", example: "Sein Verhalten war unmöglich." },
+            { german: "ansprechbar", arabic: "متجاوب", hint: "Adjective", explanation: "Responsive.", example: "Er war nach dem Unfall nicht ansprechbar." },
+            { german: "heilbar", arabic: "قابل للشفاء", hint: "Adjective", explanation: "Curable.", example: "Diese Krankheit ist zum Glück heilbar." },
+            { german: "das Bedürfnis", arabic: "الحاجة", hint: "Noun, Neuter", explanation: "Need.", example: "Ich habe das Bedürfnis, mich auszuruhen." },
+            { german: "scheitern", arabic: "يفشل", hint: "Verb", explanation: "To fail.", example: "Das Projekt ist leider gescheitert." },
+            { german: "der Übergang", arabic: "العبور / الانتقال", hint: "Noun, Masculine", explanation: "Transition.", example: "Der Übergang zur neuen Schule war schwer." },
+            { german: "der Selbstmord", arabic: "الانتحار", hint: "Noun, Masculine", explanation: "Suicide.", example: "Selbstmord ist ein tragisches Thema." },
+            { german: "der Riss", arabic: "الشق / الشرخ", hint: "Noun, Masculine", explanation: "Crack or tear.", example: "Es gibt einen Riss in der Wand." },
+            { german: "wachsen", arabic: "ينمو", hint: "Verb", explanation: "To grow.", example: "Die Pflanzen wachsen schnell." },
+            { german: "der Kreislauf", arabic: "الدورة الدموية", hint: "Noun, Masculine", explanation: "Circulation.", example: "Sport ist gut für den Kreislauf." },
+            { german: "auflösen", arabic: "يذوب / يحل", hint: "Verb", explanation: "To dissolve.", example: "Der Zucker löst sich im Tee auf." },
+            { german: "die Ankündigung", arabic: "الإعلان", hint: "Noun, Feminine", explanation: "Announcement.", example: "Wir warten auf die offizielle Ankündigung." },
+            { german: "sich wenden an", arabic: "يتوجه إلى", hint: "Verb", explanation: "To turn to/contact.", example: "Bitte wenden Sie sich an den Kundenservice." },
+            { german: "der Ausschuss", arabic: "اللجنة", hint: "Noun, Masculine", explanation: "Committee.", example: "Der Ausschuss tagt heute." },
+            { german: "vertraut machen", arabic: "يتعرف على", hint: "Verb", explanation: "To familiarize.", example: "Ich muss mich mit der neuen Software vertraut machen." },
+            { german: "die Verzerrung", arabic: "التشوه", hint: "Noun, Feminine", explanation: "Distortion.", example: "Es gab eine Verzerrung im Signal." },
+            { german: "die Überlegung", arabic: "التفكير / الاعتبار", hint: "Noun, Feminine", explanation: "Consideration.", example: "Das ist eine wichtige Überlegung." },
+            { german: "durchführen", arabic: "ينفذ", hint: "Verb", explanation: "To carry out.", example: "Wir müssen das Experiment durchführen." },
+            { german: "die Ziffer", arabic: "الرقم", hint: "Noun, Feminine", explanation: "Digit.", example: "Die letzte Ziffer ist eine Drei." },
+            { german: "abstellen", arabic: "يوقف / يضع", hint: "Verb", explanation: "To turn off or park.", example: "Kannst du das Radio abstellen?" },
+            { german: "abheben", arabic: "يسحب (مال)", hint: "Verb", explanation: "To withdraw money.", example: "Ich muss Geld vom Automaten abheben." },
+            { german: "abholen", arabic: "يقل / يحضر", hint: "Verb", explanation: "To pick up.", example: "Ich hole dich um 8 Uhr ab." },
+            { german: "anfangen mit", arabic: "يبدأ بـ", hint: "Verb", explanation: "To start with.", example: "Wir fangen mit der Übung an." },
+            { german: "sich anfreunden", arabic: "يصادق", hint: "Verb", explanation: "To make friends.", example: "Sie hat sich schnell mit ihm angefreundet." },
+            { german: "sich bedanken bei", arabic: "يشكر", hint: "Verb", explanation: "To thank someone.", example: "Ich möchte mich bei dir bedanken." },
+            { german: "sich beschweren", arabic: "يشتكي", hint: "Verb", explanation: "To complain.", example: "Der Gast beschwert sich über das Essen." },
+            { german: "einladen zu", arabic: "يدعو إلى", hint: "Verb", explanation: "To invite to.", example: "Ich lade dich zu meinem Geburtstag ein." },
+            { german: "sich entschuldigen", arabic: "يعتذر", hint: "Verb", explanation: "To apologize.", example: "Er hat sich für seinen Fehler entschuldigt." },
+            { german: "erzählen von", arabic: "يحكي عن", hint: "Verb", explanation: "To tell about.", example: "Erzähl mir von deinem Urlaub." },
+            { german: "fragen nach", arabic: "يسأل عن", hint: "Verb", explanation: "To ask for/about.", example: "Ein Mann fragt nach dem Weg." },
+            { german: "gratulieren zu", arabic: "يهنئ بـ", hint: "Verb", explanation: "To congratulate on.", example: "Ich gratuliere dir zu deinem Erfolg." },
+            { german: "passen zu", arabic: "يناسب", hint: "Verb", explanation: "To fit/match.", example: "Die Schuhe passen nicht zu der Hose." },
+            { german: "sich treffen mit", arabic: "يقابل", hint: "Verb", explanation: "To meet with.", example: "Ich treffe mich später mit Freunden." },
+            { german: "sich unterhalten mit", arabic: "يتحدث مع", hint: "Verb", explanation: "To converse with.", example: "Ich habe mich lange mit ihm unterhalten." },
+            { german: "vergleichen mit", arabic: "يقارن بـ", hint: "Verb", explanation: "To compare with.", example: "Man kann Äpfel nicht mit Birnen vergleichen." },
+            { german: "sich verteidigen", arabic: "يدافع عن نفسه", hint: "Verb", explanation: "To defend oneself.", example: "Er musste sich vor Gericht verteidigen." },
+            { german: "die Anschuldigung", arabic: "الاتهام", hint: "Noun, Feminine", explanation: "Accusation.", example: "Die Anschuldigung war falsch." },
+            { german: "widerlich", arabic: "مقرف", hint: "Adjective", explanation: "Disgusting.", example: "Das Essen schmeckt widerlich." },
+            { german: "haltbar", arabic: "صالح (للتخزين)", hint: "Adjective", explanation: "Durable/Shelf-stable.", example: "Die Milch ist noch drei Tage haltbar." },
+            { german: "das Guthaben", arabic: "الرصيد", hint: "Noun, Neuter", explanation: "Credit.", example: "Mein Guthaben ist aufgebraucht." },
+            { german: "auftauen", arabic: "يذوب", hint: "Verb", explanation: "To thaw.", example: "Das Fleisch muss erst auftauen." },
+            { german: "der Griff", arabic: "القبضة", hint: "Noun, Masculine", explanation: "Grip/Handle.", example: "Der Griff ist abgebrochen." },
+            { german: "unumgänglich", arabic: "حتمي", hint: "Adjective", explanation: "Inevitable.", example: "Eine Operation ist unumgänglich." },
+            { german: "der Verstoß", arabic: "المخالفة", hint: "Noun, Masculine", explanation: "Violation.", example: "Das ist ein Verstoß gegen die Regeln." },
+            { german: "zulässig", arabic: "مسموح", hint: "Adjective", explanation: "Permissible.", example: "Rauchen ist hier nicht zulässig." },
+            { german: "die Verteilung", arabic: "التوزيع", hint: "Noun, Feminine", explanation: "Distribution.", example: "Die Verteilung der Aufgaben war fair." },
+            { german: "zwangsläufig", arabic: "حتمي", hint: "Adjective", explanation: "Inevitably.", example: "Das führt zwangsläufig zu Problemen." },
+            { german: "der Aufbau", arabic: "البناء", hint: "Noun, Masculine", explanation: "Structure/Construction.", example: "Der Aufbau des Buches ist logisch." },
+            { german: "vernachlässigen", arabic: "يهمل", hint: "Verb", explanation: "To neglect.", example: "Er vernachlässigt seine Pflichten." },
+            { german: "anschnallen", arabic: "يربط الحزام", hint: "Verb", explanation: "To buckle up.", example: "Bitte anschnallen!" },
+            { german: "schüchtern", arabic: "خجول", hint: "Adjective", explanation: "Shy.", example: "Das Kind ist sehr schüchtern." },
+            { german: "rückwirkend", arabic: "بأثر رجعي", hint: "Adjective", explanation: "Retroactive.", example: "Das Gesetz gilt rückwirkend." },
+            { german: "der Rückstand", arabic: "التأخير", hint: "Noun, Masculine", explanation: "Backlog.", example: "Wir sind mit der Arbeit im Rückstand." },
+            { german: "die Belastung", arabic: "العبء", hint: "Noun, Feminine", explanation: "Burden.", example: "Lärm ist eine große Belastung." },
+            { german: "vereinfachen", arabic: "يبسط", hint: "Verb", explanation: "To simplify.", example: "Wir müssen den Prozess vereinfachen." },
+            { german: "erschöpft", arabic: "مرهق", hint: "Adjective", explanation: "Exhausted.", example: "Ich bin völlig erschöpft." },
+            { german: "schimpfen", arabic: "يوبخ", hint: "Verb", explanation: "To scold.", example: "Die Mutter schimpft mit dem Kind." },
+            { german: "beschleunigen", arabic: "يسرع", hint: "Verb", explanation: "To accelerate.", example: "Er beschleunigte das Auto." },
+            { german: "ständig", arabic: "باستمرار", hint: "Adjective", explanation: "Constantly.", example: "Er kommt ständig zu spät." },
+            { german: "zocken", arabic: "يلعب (ألعاب فيديو/قمار)", hint: "Verb (Slang)", explanation: "To gamble/play games.", example: "Er zockt den ganzen Tag am Computer." },
+            { german: "gehorchen", arabic: "يطيع", hint: "Verb", explanation: "To obey.", example: "Der Hund gehorcht seinem Besitzer." },
+            { german: "der Winkel", arabic: "الزاوية", hint: "Noun, Masculine", explanation: "Angle.", example: "Messen Sie den Winkel." },
+            { german: "ertragen", arabic: "يتحمل", hint: "Verb", explanation: "To endure.", example: "Ich kann diesen Lärm nicht ertragen." },
+            { german: "zögern", arabic: "يتردد", hint: "Verb", explanation: "To hesitate.", example: "Zögern Sie nicht, mich zu fragen." },
+            { german: "der Reißverschluss", arabic: "السحاب", hint: "Noun, Masculine", explanation: "Zipper.", example: "Der Reißverschluss meiner Jacke ist kaputt." }
         ];
 
-        // --- State Management ---
-        const state = {
-            score: 0,
-            streak: 0,
-            currentQuestion: null,
-            isAnswered: false,
-            isLoading: false
-        };
+        // --- GAME LOGIC ---
 
-        // --- DOM Elements ---
-        const els = {
-            startScreen: document.getElementById('startScreen'),
-            startBtn: document.getElementById('startBtn'),
-            gameContainer: document.getElementById('gameContainer'),
-            loadingState: document.getElementById('loadingState'),
-            questionCard: document.getElementById('questionCard'),
-            questionWord: document.getElementById('questionWord'),
-            langBadge: document.getElementById('langBadge'),
-            hintContainer: document.getElementById('hintContainer'),
-            hintText: document.getElementById('hintText'),
-            optionsGrid: document.getElementById('optionsGrid'),
-            feedbackSection: document.getElementById('feedbackSection'),
-            feedbackTitle: document.getElementById('feedbackTitle'),
-            correctAnswerText: document.getElementById('correctAnswerText'),
-            correctAnswerSpan: document.getElementById('correctAnswerSpan'),
-            explanationText: document.getElementById('explanationText'),
-            nextBtn: document.getElementById('nextBtn'),
-            skipBtn: document.getElementById('skipBtn'),
-            scoreDisplay: document.getElementById('scoreDisplay'),
-            streakDisplay: document.getElementById('streakDisplay'),
-            year: document.getElementById('year')
-        };
+        const startScreen = document.getElementById('startScreen');
+        const gameContainer = document.getElementById('gameContainer');
+        const startBtn = document.getElementById('startBtn');
+        const questionCard = document.getElementById('questionCard');
+        const loadingState = document.getElementById('loadingState');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const streakDisplay = document.getElementById('streakDisplay');
+        const nextBtn = document.getElementById('nextBtn');
+        const skipBtn = document.getElementById('skipBtn');
+        
+        let score = 0;
+        let streak = 0;
+        let currentQuestion = null;
+        let isAnswered = false;
 
-        els.year.textContent = new Date().getFullYear();
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-        // --- Initialization ---
-        function init() {
-            els.startBtn.addEventListener('click', handleStart);
-            els.nextBtn.addEventListener('click', loadQuestion);
-            els.skipBtn.addEventListener('click', loadQuestion);
+        startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            gameContainer.classList.remove('hidden');
+            gameContainer.classList.add('animate-fade-in-up');
+            fetchQuestion();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            fetchQuestion();
+        });
+
+        skipBtn.addEventListener('click', () => {
+            streak = 0;
+            updateScoreUI();
+            fetchQuestion();
+        });
+
+        function updateScoreUI() {
+            scoreDisplay.textContent = `Score: ${score}`;
+            streakDisplay.textContent = `Streak: ${streak} 🔥`;
         }
 
-        function handleStart() {
-            els.startScreen.classList.add('hidden');
-            els.gameContainer.classList.remove('hidden');
-            els.gameContainer.classList.add('animate-fade-in-up');
-            loadQuestion();
-        }
-
-        // --- Logic: Local Generator ---
         async function fetchQuestion() {
-            // Simulate a tiny delay for better UX (so it doesn't feel glitchy)
-            await new Promise(resolve => setTimeout(resolve, 300));
-
-            if (LOCAL_DICTIONARY.length < 4) {
-                alert("Dictionary needs at least 4 words.");
-                return null;
-            }
-
-            // 1. Pick a random word
-            const targetIndex = Math.floor(Math.random() * LOCAL_DICTIONARY.length);
-            const targetWord = LOCAL_DICTIONARY[targetIndex];
-
-            // 2. Decide direction: German->Arabic (50%) or Arabic->German (50%)
-            const isSourceGerman = Math.random() > 0.5;
+            // Reset UI
+            isAnswered = false;
+            questionCard.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+            loadingState.classList.add('flex');
+            document.getElementById('feedbackSection').classList.add('hidden');
             
-            const questionWord = isSourceGerman ? targetWord.german : targetWord.arabic;
-            const correctAnswer = isSourceGerman ? targetWord.arabic : targetWord.german;
-            const sourceLang = isSourceGerman ? "German" : "Arabic";
+            // Simulate brief delay for better UX
+            await new Promise(r => setTimeout(r, 400));
 
-            // 3. Generate 3 incorrect answers
-            const incorrectAnswers = [];
-            const usedIndices = new Set([targetIndex]);
-
-            while (incorrectAnswers.length < 3) {
-                const randIndex = Math.floor(Math.random() * LOCAL_DICTIONARY.length);
-                if (!usedIndices.has(randIndex)) {
-                    const wrongEntry = LOCAL_DICTIONARY[randIndex];
-                    // Incorrect answer must be in the SAME language as the correct answer
-                    const wrongWord = isSourceGerman ? wrongEntry.arabic : wrongEntry.german;
-                    
-                    incorrectAnswers.push(wrongWord);
-                    usedIndices.add(randIndex);
+            // GENERATE QUESTION FROM LOCAL DICTIONARY
+            try {
+                if (LOCAL_DICTIONARY.length < 4) {
+                    throw new Error("Dictionary too small.");
                 }
+
+                // 1. Pick target word
+                const targetIndex = Math.floor(Math.random() * LOCAL_DICTIONARY.length);
+                const targetWord = LOCAL_DICTIONARY[targetIndex];
+
+                // 2. FORCE GERMAN -> ARABIC
+                const questionWord = targetWord.german;
+                const correctAnswer = targetWord.arabic;
+                const sourceLang = "German";
+
+                // 3. Pick 3 incorrect options (must be different)
+                const incorrectAnswers = [];
+                const usedIndices = new Set([targetIndex]);
+
+                while (incorrectAnswers.length < 3) {
+                    const randIndex = Math.floor(Math.random() * LOCAL_DICTIONARY.length);
+                    if (!usedIndices.has(randIndex)) {
+                        incorrectAnswers.push(LOCAL_DICTIONARY[randIndex].arabic);
+                        usedIndices.add(randIndex);
+                    }
+                }
+
+                currentQuestion = {
+                    questionWord: questionWord,
+                    correctAnswer: correctAnswer,
+                    incorrectAnswers: incorrectAnswers,
+                    sourceLang: sourceLang,
+                    hint: targetWord.hint,
+                    explanation: targetWord.explanation,
+                    example: targetWord.example || "" // Add example to state
+                };
+
+                renderQuestion(currentQuestion);
+
+            } catch (error) {
+                console.error(error);
+                alert("Error generating question. Check console.");
             }
-
-            return {
-                questionWord,
-                sourceLang,
-                correctAnswer,
-                incorrectAnswers,
-                hint: targetWord.hint,
-                explanation: targetWord.explanation
-            };
         }
 
-        // --- Game Logic ---
-        async function loadQuestion() {
-            if (state.isLoading) return;
-            
-            setLoading(true);
-            state.isAnswered = false;
-            
-            // UI Reset
-            els.feedbackSection.classList.add('hidden');
-            els.questionCard.classList.add('hidden');
-            els.loadingState.classList.remove('hidden');
-            els.loadingState.style.display = 'flex';
+        function renderQuestion(question) {
+            loadingState.classList.add('hidden');
+            loadingState.classList.remove('flex');
+            questionCard.classList.remove('hidden');
+            questionCard.classList.add('animate-fade-in-up');
 
-            const data = await fetchQuestion();
+            // Set Text
+            document.getElementById('questionWord').textContent = question.questionWord;
             
-            if (data) {
-                state.currentQuestion = data;
-                renderQuestion(data);
-            }
-            
-            setLoading(false);
-        }
+            // Set Example Sentence
+            const exampleEl = document.getElementById('questionExample');
+            exampleEl.textContent = question.example;
 
-        function setLoading(loading) {
-            state.isLoading = loading;
-            els.skipBtn.disabled = loading;
-        }
-
-        function renderQuestion(q) {
-            els.loadingState.classList.add('hidden');
-            els.loadingState.style.display = 'none';
-            els.questionCard.classList.remove('hidden');
-
-            // Header
-            els.langBadge.textContent = `Translate this ${q.sourceLang} word`;
-            els.questionWord.textContent = q.questionWord;
-            els.questionWord.className = `text-4xl md:text-5xl font-bold text-white mb-6 transition-all duration-300 ${q.sourceLang === 'Arabic' ? 'font-arabic' : ''}`;
-            
-            // Hint
-            if (q.hint) {
-                els.hintContainer.classList.remove('hidden');
-                els.hintContainer.style.display = 'flex';
-                els.hintText.textContent = q.hint;
+            // Set Hint
+            const hintContainer = document.getElementById('hintContainer');
+            if (question.hint) {
+                hintContainer.classList.remove('hidden');
+                hintContainer.classList.add('inline-flex');
+                document.getElementById('hintText').textContent = question.hint;
             } else {
-                els.hintContainer.classList.add('hidden');
+                hintContainer.classList.add('hidden');
             }
 
-            // Options Shuffle
-            const allOptions = [...q.incorrectAnswers, q.correctAnswer];
+            // Shuffle Options
+            const allOptions = [...question.incorrectAnswers, question.correctAnswer];
             for (let i = allOptions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [allOptions[i], allOptions[j]] = [allOptions[j], allOptions[i]];
             }
 
             // Render Buttons
-            els.optionsGrid.innerHTML = '';
-            allOptions.forEach(opt => {
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+
+            allOptions.forEach(option => {
                 const btn = document.createElement('button');
-                btn.className = `p-6 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex items-center justify-between group bg-slate-50 border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50 ${q.sourceLang === 'German' ? 'font-arabic' : ''}`;
-                btn.innerHTML = `<span>${opt}</span>`;
-                btn.onclick = () => handleAnswer(opt, btn);
-                els.optionsGrid.appendChild(btn);
+                btn.className = `p-4 md:p-5 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex items-center justify-between group bg-slate-50 border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50 font-arabic`;
+                
+                const span = document.createElement('span');
+                span.textContent = option;
+                btn.appendChild(span);
+
+                btn.onclick = () => handleAnswer(option, btn, allOptions);
+                grid.appendChild(btn);
             });
         }
 
-        function handleAnswer(selectedOpt, btnElement) {
-            if (state.isAnswered) return;
-            state.isAnswered = true;
+        function handleAnswer(selectedOption, btnElement, allOptions) {
+            if (isAnswered) return;
+            isAnswered = true;
 
-            const isCorrect = selectedOpt === state.currentQuestion.correctAnswer;
+            const isCorrect = selectedOption === currentQuestion.correctAnswer;
+            const grid = document.getElementById('optionsGrid');
+            const buttons = grid.getElementsByTagName('button');
 
             // Update Score
             if (isCorrect) {
-                state.score += 10;
-                state.streak += 1;
+                score += 10;
+                streak += 1;
+                // Highlight Selected Correct
+                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex items-center justify-between group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 font-arabic";
+                btnElement.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
             } else {
-                state.streak = 0;
+                streak = 0;
+                // Highlight Selected Wrong
+                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex items-center justify-between group bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 font-arabic";
+                btnElement.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>`;
+
+                // Find and Highlight Actual Correct
+                for (let btn of buttons) {
+                    if (btn.querySelector('span').textContent === currentQuestion.correctAnswer) {
+                        btn.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex items-center justify-between group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 font-arabic";
+                        btn.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                    }
+                }
             }
-            els.scoreDisplay.textContent = `Score: ${state.score}`;
-            els.streakDisplay.textContent = `Streak: ${state.streak} 🔥`;
 
-            // Visual Feedback on Buttons
-            const buttons = els.optionsGrid.querySelectorAll('button');
-            buttons.forEach(btn => {
-                const optText = btn.querySelector('span').textContent;
+            // Disable all buttons
+            for (let btn of buttons) {
                 btn.disabled = true;
-                btn.classList.remove('hover:border-indigo-300', 'hover:bg-indigo-50');
-
-                if (optText === state.currentQuestion.correctAnswer) {
-                    // Correct Style
-                    btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'ring-1', 'ring-green-500');
-                    btn.innerHTML += `<svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-                } else if (optText === selectedOpt && !isCorrect) {
-                    // Wrong Style
-                    btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800', 'ring-1', 'ring-red-500');
-                    btn.innerHTML += `<svg class="w-5 h-5 text-red-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>`;
-                } else {
+                if (!btn.classList.contains('bg-green-100') && !btn.classList.contains('bg-red-100')) {
                     btn.classList.add('opacity-50');
                 }
-            });
-
-            // Show Feedback Section
-            els.feedbackSection.classList.remove('hidden');
-            els.feedbackSection.className = `mt-8 p-6 rounded-2xl animate-fade-in-up border ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`;
-            
-            // Feedback Title
-            els.feedbackTitle.className = `font-bold text-xl mb-2 flex items-center gap-2 ${isCorrect ? 'text-green-700' : 'text-red-700'}`;
-            els.feedbackTitle.innerHTML = isCorrect 
-                ? `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Richtig! Excellent.`
-                : `<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg> Not quite.`;
-
-            // Correction Text
-            if (!isCorrect) {
-                els.correctAnswerText.classList.remove('hidden');
-                els.correctAnswerSpan.textContent = state.currentQuestion.correctAnswer;
-            } else {
-                els.correctAnswerText.classList.add('hidden');
             }
 
-            // Explanation
-            if (state.currentQuestion.explanation) {
-                els.explanationText.textContent = state.currentQuestion.explanation;
-            }
+            updateScoreUI();
+            showFeedback(isCorrect);
         }
 
-        // Start
-        init();
+        function showFeedback(isCorrect) {
+            const feedbackSection = document.getElementById('feedbackSection');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const explanationText = document.getElementById('explanationText');
+            const correctAnswerText = document.getElementById('correctAnswerText');
+            const correctAnswerSpan = document.getElementById('correctAnswerSpan');
 
+            feedbackSection.classList.remove('hidden');
+            feedbackSection.className = `mt-6 p-4 rounded-xl animate-fade-in-up border ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`;
+
+            if (isCorrect) {
+                feedbackTitle.className = "font-bold text-lg mb-1 flex items-center gap-2 text-green-700";
+                feedbackTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Richtig! Excellent.`;
+                correctAnswerText.classList.add('hidden');
+            } else {
+                feedbackTitle.className = "font-bold text-lg mb-1 flex items-center gap-2 text-red-700";
+                feedbackTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg> Not quite.`;
+                correctAnswerText.classList.remove('hidden');
+                correctAnswerSpan.textContent = currentQuestion.correctAnswer;
+            }
+
+            if (currentQuestion.explanation) {
+                explanationText.textContent = currentQuestion.explanation;
+                document.getElementById('explanationBox').classList.remove('hidden');
+            } else {
+                document.getElementById('explanationBox').classList.add('hidden');
+            }
+        }
     </script>
 </body>
 </html>
