@@ -38,7 +38,7 @@
         .progress-bar {
             height: 4px;
             background-color: #4f46e5; /* Indigo-600 */
-            animation: progress 2.5s linear forwards;
+            animation: progress 1s linear forwards;
         }
     </style>
 <script type="importmap">
@@ -169,7 +169,7 @@
                                 </div>
                                 
                                 <div class="text-center text-xs text-slate-400 italic">
-                                    Next question in 2.5 seconds...
+                                    Next question in 1 second...
                                 </div>
                             </div>
                         </div>
@@ -413,10 +413,10 @@
             updateScoreUI();
             showFeedback(isCorrect);
             
-            // AUTO NEXT: Wait 2.5 seconds then fetch next
+            // AUTO NEXT: Wait 1 second then fetch next
             setTimeout(() => {
                 fetchQuestion();
-            }, 2500);
+            }, 1000);
         }
 
         function showFeedback(isCorrect) {
