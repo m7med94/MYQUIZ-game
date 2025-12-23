@@ -80,7 +80,7 @@
                 <h2 class="text-2xl font-bold text-slate-900 mb-3">Vocabulary Challenge</h2>
                 <p class="text-slate-600 mb-8 text-base leading-relaxed">
                     Test your knowledge with your personal dictionary.
-                    <br/><span class="text-sm text-slate-400 mt-2 block font-medium">German → Arabic</span>
+                    <br/><span class="text-sm text-slate-400 mt-2 block font-medium">German → Arabic + English</span>
                 </p>
                 <button id="startBtn" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold rounded-2xl transition-all shadow-lg hover:shadow-emerald-200 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
                     <span>Start Quiz</span>
@@ -120,7 +120,7 @@
                     <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_50%_120%,#fff_0%,transparent_50%)]"></div>
                     
                     <span id="langBadge" class="inline-block px-2.5 py-0.5 bg-black/20 text-white text-[10px] uppercase tracking-wider font-bold rounded-full backdrop-blur-sm mb-3">
-                        Translate to Arabic
+                        Translate to Arabic & English
                     </span>
                     
                     <h2 id="questionWord" class="text-3xl md:text-4xl font-bold text-white mb-3 transition-all duration-300">
@@ -159,7 +159,10 @@
                                     </div>
                                     
                                     <div class="space-y-2 text-slate-700">
-                                        <p id="correctAnswerText" class="text-base hidden">The correct answer is <span class="font-bold text-slate-900 font-arabic text-lg" id="correctAnswerSpan"></span>.</p>
+                                        <div id="correctAnswerText" class="text-base hidden">
+                                            The correct answer is:
+                                            <div class="font-bold text-slate-900 mt-1" id="correctAnswerSpan"></div>
+                                        </div>
                                         
                                         <div id="explanationBox" class="flex items-start gap-2 text-slate-600 bg-white/60 p-2.5 rounded-lg mt-2 text-sm">
                                             <svg class="w-4 h-4 mt-0.5 text-amber-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
@@ -295,19 +298,22 @@
 
                 const targetWord = dictionary[targetIndex];
 
-                // 2. FORCE GERMAN -> ARABIC
+                // 2. Question: German Word
                 const questionWord = targetWord.german;
-                const correctAnswer = targetWord.arabic;
+                
+                // 3. Construct Answer Strings (Arabic + English)
+                const getBilingualString = (wordObj) => `${wordObj.arabic} (${wordObj.english})`;
+                
+                const correctAnswer = getBilingualString(targetWord);
 
-                // 3. Pick 3 incorrect options (must be different)
+                // 4. Pick 3 incorrect options (must be different)
                 const incorrectAnswers = [];
-                // We can pick wrong answers from the WHOLE dictionary
                 const usedWrongIndices = new Set([targetIndex]);
 
                 while (incorrectAnswers.length < 3) {
                     const randIndex = Math.floor(Math.random() * dictionary.length);
                     if (!usedWrongIndices.has(randIndex)) {
-                        incorrectAnswers.push(dictionary[randIndex].arabic);
+                        incorrectAnswers.push(getBilingualString(dictionary[randIndex]));
                         usedWrongIndices.add(randIndex);
                     }
                 }
@@ -321,7 +327,7 @@
                     example: targetWord.example || ""
                 };
 
-                updateScoreUI(); // Update progress counter
+                updateScoreUI(); 
                 renderQuestion(currentQuestion);
 
             } catch (error) {
@@ -363,18 +369,23 @@
 
             allOptions.forEach(option => {
                 const btn = document.createElement('button');
-                btn.className = `p-4 md:p-5 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex items-center justify-between group bg-slate-50 border-slate-200 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50 font-arabic`;
+                btn.className = `p-4 md:p-5 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex flex-col items-center justify-center gap-1 group bg-slate-50 border-slate-200 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50 text-center`;
                 
-                const span = document.createElement('span');
-                span.textContent = option;
-                btn.appendChild(span);
+                // Split bilingual string for better styling
+                const [arabic, english] = option.split(' (');
+                const englishClean = english.replace(')', '');
 
-                btn.onclick = () => handleAnswer(option, btn, allOptions);
+                btn.innerHTML = `
+                    <span class="font-arabic text-xl leading-relaxed">${arabic}</span>
+                    <span class="text-xs font-normal opacity-60 font-sans tracking-tight">${englishClean}</span>
+                `;
+
+                btn.onclick = () => handleAnswer(option, btn);
                 grid.appendChild(btn);
             });
         }
 
-        function handleAnswer(selectedOption, btnElement, allOptions) {
+        function handleAnswer(selectedOption, btnElement) {
             if (isAnswered) return;
             isAnswered = true;
 
@@ -382,22 +393,26 @@
             const grid = document.getElementById('optionsGrid');
             const buttons = grid.getElementsByTagName('button');
 
+            // Helper to get text content used for comparison
+            const getBtnOption = (btn) => {
+                const arb = btn.querySelector('.font-arabic').textContent;
+                const eng = btn.querySelector('.text-xs').textContent;
+                return `${arb} (${eng})`;
+            };
+
             // Update Score
             if (isCorrect) {
                 score += 10;
                 streak += 1;
-                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex items-center justify-between group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 font-arabic";
-                btnElement.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
             } else {
                 streak = 0;
-                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex items-center justify-between group bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 font-arabic";
-                btnElement.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>`;
+                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 group bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 text-center";
 
-                // Find and Highlight Actual Correct
+                // Highlight correct one
                 for (let btn of buttons) {
-                    if (btn.querySelector('span').textContent === currentQuestion.correctAnswer) {
-                        btn.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex items-center justify-between group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 font-arabic";
-                        btn.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+                    if (getBtnOption(btn) === currentQuestion.correctAnswer) {
+                        btn.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
                     }
                 }
             }
@@ -440,8 +455,14 @@
             } else {
                 feedbackTitle.className = "font-bold text-lg mb-1 flex items-center gap-2 text-red-700";
                 feedbackTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg> Not quite.`;
+                
                 correctAnswerText.classList.remove('hidden');
-                correctAnswerSpan.textContent = currentQuestion.correctAnswer;
+                
+                const [arb, eng] = currentQuestion.correctAnswer.split(' (');
+                correctAnswerSpan.innerHTML = `
+                    <span class="font-arabic text-xl mr-2">${arb}</span>
+                    <span class="text-sm font-medium text-slate-500">(${eng}</span>
+                `;
             }
 
             if (currentQuestion.explanation) {
