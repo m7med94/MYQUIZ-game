@@ -52,23 +52,8 @@
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col text-slate-900">
 
-    <!-- Header (Compact) -->
-    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20 h-12 flex items-center">
-        <div class="max-w-2xl mx-auto px-4 w-full flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div id="logoIcon" class="bg-indigo-600 p-1 rounded-md text-white transition-colors duration-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="17.5" y1="12" y2="12"/><line x1="16.25" x2="16.25" y1="10.75" y2="13.25"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
-                </div>
-                <h1 class="text-base font-bold text-slate-800 tracking-tight flex items-baseline">
-                    Al-Brücke <span id="logoArabic" class="text-indigo-600 font-arabic font-normal text-base ml-1 transition-colors duration-500">الجسر</span>
-                </h1>
-            </div>
-            <div class="text-xs text-slate-400 font-medium">Native Mode</div>
-        </div>
-    </header>
-
     <!-- Main Content -->
-    <main class="max-w-2xl mx-auto px-2 sm:px-4 py-4 md:py-6 flex-grow w-full flex flex-col items-center justify-center">
+    <main class="max-w-2xl mx-auto px-2 sm:px-4 py-8 md:py-12 flex-grow w-full flex flex-col items-center justify-center">
         
         <!-- Start Screen -->
         <div id="startScreen" class="w-full max-w-lg animate-fade-in-up">
@@ -76,7 +61,7 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full text-indigo-600 mb-6 ring-8 ring-indigo-50/50">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 </div>
-                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-2">Vocabulary Challenge</h2>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-2">Al-Brücke Quiz</h2>
                 <p class="text-slate-600 mb-6 md:mb-8 text-sm md:text-base leading-relaxed px-4">
                     Master your German vocabulary with Arabic and English translations.
                 </p>
@@ -222,13 +207,20 @@
             const theme = THEMES[currentThemeIndex];
 
             const header = document.getElementById('questionHeader');
-            header.className = `p-5 md:p-8 text-center relative overflow-hidden transition-all duration-700 ease-in-out bg-gradient-to-br ${theme.gradient}`;
+            if (header) {
+                header.className = `p-5 md:p-8 text-center relative overflow-hidden transition-all duration-700 ease-in-out bg-gradient-to-br ${theme.gradient}`;
+            }
             
-            document.getElementById('logoIcon').style.backgroundColor = theme.primary;
-            document.getElementById('logoArabic').style.color = theme.primary;
-            document.getElementById('streakBadge').style.color = theme.primary;
-            document.getElementById('skipBtn').onmouseover = () => { document.getElementById('skipBtn').style.color = theme.primary; };
-            document.getElementById('skipBtn').onmouseout = () => { document.getElementById('skipBtn').style.color = '#94a3b8'; };
+            const streakBadge = document.getElementById('streakBadge');
+            if (streakBadge) {
+                streakBadge.style.color = theme.primary;
+            }
+
+            const skipBtn = document.getElementById('skipBtn');
+            if (skipBtn) {
+                skipBtn.onmouseover = () => { skipBtn.style.color = theme.primary; };
+                skipBtn.onmouseout = () => { skipBtn.style.color = '#94a3b8'; };
+            }
             
             return theme;
         }
@@ -306,7 +298,6 @@
 
                 const targetWord = dictionary[targetIndex];
                 
-                // FIXED: Use a fallback for the English property to prevent "undefined"
                 const getBilingualString = (wordObj) => {
                     const arb = wordObj.arabic || '???';
                     const eng = wordObj.english || 'N/A';
@@ -371,10 +362,8 @@
 
             allOptions.forEach(option => {
                 const btn = document.createElement('button');
-                // Mobile-friendly classes: flex-col, gap-0.5, text-center
                 btn.className = `p-3 md:p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center justify-center gap-0.5 bg-slate-50 border-slate-200 text-slate-700 ${theme.hover} text-center`;
                 
-                // Parsing bilingual string safely
                 let arabic = '???';
                 let english = 'N/A';
                 
