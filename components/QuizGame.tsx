@@ -45,11 +45,6 @@ const QuizGame: React.FC = () => {
     } else {
       setStreak(0);
     }
-    
-    // Auto-advance after animation
-    setTimeout(() => {
-      // Logic for automatic progression could go here
-    }, 1500);
   };
 
   if (loading && !question) {
@@ -131,16 +126,30 @@ const QuizGame: React.FC = () => {
                 }
               }
 
+              // Split Arabic and English for bigger, equal font styling
+              let arabicPart = option;
+              let englishPart = '';
+              if (option.includes(' (')) {
+                  const parts = option.split(' (');
+                  arabicPart = parts[0];
+                  englishPart = parts[1].replace(')', '');
+              }
+
               return (
                 <button
                   key={idx}
                   onClick={() => handleAnswer(option)}
                   disabled={isAnswered}
-                  className={`p-4 md:p-6 rounded-xl border-2 text-base md:text-lg font-medium transition-all duration-300 flex items-center justify-between group ${btnClass} ${question.sourceLang === 'German' ? 'font-arabic leading-relaxed' : ''}`}
+                  className={`p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-2 group ${btnClass}`}
                 >
-                  <span className="flex-1 text-left">{option}</span>
-                  {isAnswered && isActualCorrect && <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 ml-2" />}
-                  {isAnswered && isSelected && !isActualCorrect && <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 ml-2" />}
+                  <span className="font-arabic text-2xl md:text-3xl font-bold leading-relaxed">{arabicPart}</span>
+                  {englishPart && (
+                    <span className="text-2xl md:text-3xl font-bold">{englishPart}</span>
+                  )}
+                  <div className="flex items-center justify-center mt-1">
+                    {isAnswered && isActualCorrect && <CheckCircle className="w-6 h-6 text-green-600" />}
+                    {isAnswered && isSelected && !isActualCorrect && <XCircle className="w-6 h-6 text-red-600" />}
+                  </div>
                 </button>
               );
             })}
