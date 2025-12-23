@@ -37,7 +37,7 @@
         }
         .progress-bar {
             height: 4px;
-            background-color: #059669; /* emerald-600 */
+            /* background-color set dynamically via JS */
             animation: progress 1s linear forwards;
         }
     </style>
@@ -51,17 +51,17 @@
 }
 </script>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-emerald-50/30 min-h-screen flex flex-col text-slate-900">
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col text-slate-900">
 
     <!-- Header (Compact) -->
     <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20 h-12 flex items-center">
         <div class="max-w-2xl mx-auto px-4 w-full flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <div class="bg-emerald-600 p-1 rounded-md text-white">
+                <div id="logoIcon" class="bg-indigo-600 p-1 rounded-md text-white transition-colors duration-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="17.5" y1="12" y2="12"/><line x1="16.25" x2="16.25" y1="10.75" y2="13.25"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
                 </div>
                 <h1 class="text-base font-bold text-slate-800 tracking-tight flex items-baseline">
-                    Al-Brücke <span class="text-emerald-600 font-arabic font-normal text-base ml-1">الجسر</span>
+                    Al-Brücke <span id="logoArabic" class="text-indigo-600 font-arabic font-normal text-base ml-1 transition-colors duration-500">الجسر</span>
                 </h1>
             </div>
             <div class="text-xs text-slate-400 font-medium">Native Mode</div>
@@ -74,7 +74,7 @@
         <!-- Start Screen -->
         <div id="startScreen" class="w-full max-w-lg animate-fade-in-up">
             <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-10 text-center">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-emerald-50 rounded-full text-emerald-600 mb-6 ring-8 ring-emerald-50/50">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-50 rounded-full text-indigo-600 mb-6 ring-8 ring-indigo-50/50">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900 mb-3">Vocabulary Challenge</h2>
@@ -82,7 +82,7 @@
                     Test your knowledge with your personal dictionary.
                     <br/><span class="text-sm text-slate-400 mt-2 block font-medium">German → Arabic + English</span>
                 </p>
-                <button id="startBtn" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold rounded-2xl transition-all shadow-lg hover:shadow-emerald-200 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
+                <button id="startBtn" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-2xl transition-all shadow-lg hover:shadow-indigo-200 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
                     <span>Start Quiz</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </button>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="flex items-center gap-4 text-xs">
                     <span class="text-slate-400" id="progressDisplay">0 / 0</span>
-                    <div class="flex items-center gap-1 text-emerald-600 font-medium">
+                    <div id="streakBadge" class="flex items-center gap-1 text-indigo-600 font-medium transition-colors duration-500">
                         <span id="streakDisplay">Streak: 0 🔥</span>
                     </div>
                 </div>
@@ -108,15 +108,15 @@
 
             <!-- Loading State -->
             <div id="loadingState" class="hidden flex-col items-center justify-center min-h-[300px] text-slate-400">
-                <svg class="w-8 h-8 animate-spin-custom mb-3 text-emerald-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                <svg class="w-8 h-8 animate-spin-custom mb-3 text-indigo-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                 <p class="text-sm">Loading next word...</p>
             </div>
 
             <!-- Question Card -->
             <div id="questionCard" class="hidden bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 relative">
                 
-                <!-- Card Header (Gradient) - EDIT COLOR HERE -->
-                <div class="bg-gradient-to-br from-emerald-600 to-teal-700 p-6 md:p-8 text-center relative overflow-hidden">
+                <!-- Card Header (Dynamic Gradient) -->
+                <div id="questionHeader" class="p-6 md:p-8 text-center relative overflow-hidden transition-all duration-700 ease-in-out">
                     <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_50%_120%,#fff_0%,transparent_50%)]"></div>
                     
                     <span id="langBadge" class="inline-block px-2.5 py-0.5 bg-black/20 text-white text-[10px] uppercase tracking-wider font-bold rounded-full backdrop-blur-sm mb-3">
@@ -128,11 +128,11 @@
                     </h2>
 
                     <!-- Example Sentence -->
-                    <p id="questionExample" class="text-emerald-100 text-lg font-serif italic mb-4 opacity-90 min-h-[1.5em] px-4">
+                    <p id="questionExample" class="text-white/90 text-lg font-serif italic mb-4 min-h-[1.5em] px-4">
                         
                     </p>
 
-                    <div id="hintContainer" class="hidden items-center justify-center gap-1.5 text-emerald-50 text-xs opacity-80 bg-black/10 inline-flex px-3 py-1 rounded-full">
+                    <div id="hintContainer" class="hidden items-center justify-center gap-1.5 text-white text-xs opacity-90 bg-black/10 inline-flex px-3 py-1 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         <span id="hintText"></span>
                     </div>
@@ -182,7 +182,7 @@
 
             <!-- Skip Button -->
             <div class="text-center mt-4">
-                <button id="skipBtn" class="text-slate-400 hover:text-emerald-600 text-xs font-medium flex items-center justify-center gap-1 mx-auto transition-colors">
+                <button id="skipBtn" class="text-slate-400 hover:text-indigo-600 text-xs font-medium flex items-center justify-center gap-1 mx-auto transition-colors duration-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
                     Skip Question
                 </button>
@@ -198,11 +198,46 @@
     </footer>
 
     <!-- Scripts -->
-    <!-- Load Dictionary First - Order is crucial for synchronous execution -->
-    <script src="dictionary.js" onerror="alert('Error: Could not load dictionary.js. Make sure it is in the same folder as index.html');"></script>
+    <script src="dictionary.js" onerror="alert('Error: Could not load dictionary.js');"></script>
 
-    <!-- Main Application Logic -->
     <script>
+        // --- THEME DATA ---
+        const THEMES = [
+            { id: 'indigo', gradient: 'from-indigo-600 to-violet-700', primary: '#4f46e5', accent: 'text-indigo-600', hover: 'hover:border-indigo-300 hover:bg-indigo-50', bg: 'bg-indigo-600' },
+            { id: 'emerald', gradient: 'from-emerald-600 to-teal-700', primary: '#059669', accent: 'text-emerald-600', hover: 'hover:border-emerald-300 hover:bg-emerald-50', bg: 'bg-emerald-600' },
+            { id: 'rose', gradient: 'from-rose-600 to-pink-700', primary: '#e11d48', accent: 'text-rose-600', hover: 'hover:border-rose-300 hover:bg-rose-50', bg: 'bg-rose-600' },
+            { id: 'amber', gradient: 'from-amber-500 to-orange-600', primary: '#f59e0b', accent: 'text-amber-600', hover: 'hover:border-amber-300 hover:bg-amber-50', bg: 'bg-amber-500' },
+            { id: 'blue', gradient: 'from-blue-600 to-indigo-700', primary: '#2563eb', accent: 'text-blue-600', hover: 'hover:border-blue-300 hover:bg-blue-50', bg: 'bg-blue-600' },
+            { id: 'fuchsia', gradient: 'from-fuchsia-600 to-purple-700', primary: '#c026d3', accent: 'text-fuchsia-600', hover: 'hover:border-fuchsia-300 hover:bg-fuchsia-50', bg: 'bg-fuchsia-600' },
+            { id: 'cyan', gradient: 'from-cyan-600 to-blue-700', primary: '#0891b2', accent: 'text-cyan-600', hover: 'hover:border-cyan-300 hover:bg-cyan-50', bg: 'bg-cyan-600' },
+            { id: 'slate', gradient: 'from-slate-700 to-slate-900', primary: '#334155', accent: 'text-slate-700', hover: 'hover:border-slate-300 hover:bg-slate-50', bg: 'bg-slate-700' }
+        ];
+
+        let currentThemeIndex = 0;
+
+        function randomizeTheme() {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * THEMES.length);
+            } while (nextIndex === currentThemeIndex);
+            
+            currentThemeIndex = nextIndex;
+            const theme = THEMES[currentThemeIndex];
+
+            // Apply to Header
+            const header = document.getElementById('questionHeader');
+            header.className = `p-6 md:p-8 text-center relative overflow-hidden transition-all duration-700 ease-in-out bg-gradient-to-br ${theme.gradient}`;
+            
+            // Apply to accents
+            document.getElementById('logoIcon').style.backgroundColor = theme.primary;
+            document.getElementById('logoArabic').style.color = theme.primary;
+            document.getElementById('streakBadge').style.color = theme.primary;
+            document.getElementById('skipBtn').onmouseover = () => { document.getElementById('skipBtn').style.color = theme.primary; };
+            document.getElementById('skipBtn').onmouseout = () => { document.getElementById('skipBtn').style.color = '#94a3b8'; };
+            
+            return theme;
+        }
+
         // --- GAME STATE ---
         const startScreen = document.getElementById('startScreen');
         const gameContainer = document.getElementById('gameContainer');
@@ -218,26 +253,19 @@
         let streak = 0;
         let currentQuestion = null;
         let isAnswered = false;
-        
-        // NO REPEATS LOGIC: Track available questions
         let availableIndices = []; 
         let totalQuestions = 0;
         let dictionary = [];
 
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Initialize deck
         function initDeck() {
-            // Retrieve dictionary from Window object
             dictionary = window.LOCAL_DICTIONARY || [];
-
             if (!dictionary || dictionary.length === 0) {
-                alert("Error: dictionary.js not loaded or empty. Please refresh the page.");
+                alert("Error: dictionary.js not loaded or empty.");
                 return;
             }
-            
             totalQuestions = dictionary.length;
-            // Create array [0, 1, 2, ... N]
             availableIndices = Array.from({length: totalQuestions}, (_, i) => i);
         }
 
@@ -260,56 +288,34 @@
         function updateScoreUI() {
             scoreDisplay.textContent = `Score: ${score}`;
             streakDisplay.textContent = `Streak: ${streak} 🔥`;
-            
-            // Show questions remaining/completed
             const completed = totalQuestions - availableIndices.length;
             progressDisplay.textContent = `${completed} / ${totalQuestions}`;
         }
 
         async function fetchQuestion() {
-            // Reset UI
             isAnswered = false;
             questionCard.classList.add('hidden');
             loadingState.classList.remove('hidden');
             loadingState.classList.add('flex');
             document.getElementById('feedbackSection').classList.add('hidden');
             
-            // Simulate brief delay
-            await new Promise(r => setTimeout(r, 300));
+            await new Promise(r => setTimeout(r, 200));
 
-            // GENERATE QUESTION
             try {
-                if (!dictionary || dictionary.length < 4) {
-                    throw new Error("Dictionary missing or too small (min 4 words).");
-                }
-
-                // Check deck
                 if (availableIndices.length === 0) {
-                    alert("You have gone through all words! Restarting the deck.");
                     initDeck();
                 }
 
-                // 1. Pick target word from AVAILABLE indices
                 const randomPoolIndex = Math.floor(Math.random() * availableIndices.length);
                 const targetIndex = availableIndices[randomPoolIndex];
-                
-                // Remove this index from pool so it doesn't repeat
                 availableIndices.splice(randomPoolIndex, 1);
 
                 const targetWord = dictionary[targetIndex];
-
-                // 2. Question: German Word
-                const questionWord = targetWord.german;
-                
-                // 3. Construct Answer Strings (Arabic + English)
                 const getBilingualString = (wordObj) => `${wordObj.arabic} (${wordObj.english})`;
-                
                 const correctAnswer = getBilingualString(targetWord);
 
-                // 4. Pick 3 incorrect options (must be different)
                 const incorrectAnswers = [];
                 const usedWrongIndices = new Set([targetIndex]);
-
                 while (incorrectAnswers.length < 3) {
                     const randIndex = Math.floor(Math.random() * dictionary.length);
                     if (!usedWrongIndices.has(randIndex)) {
@@ -319,7 +325,7 @@
                 }
 
                 currentQuestion = {
-                    questionWord: questionWord,
+                    questionWord: targetWord.german,
                     correctAnswer: correctAnswer,
                     incorrectAnswers: incorrectAnswers,
                     hint: targetWord.hint,
@@ -332,46 +338,40 @@
 
             } catch (error) {
                 console.error(error);
-                alert("Error generating question: " + error.message);
             }
         }
 
         function renderQuestion(question) {
+            const theme = randomizeTheme();
             loadingState.classList.add('hidden');
             loadingState.classList.remove('flex');
             questionCard.classList.remove('hidden');
             questionCard.classList.add('animate-fade-in-up');
 
-            // Set Text
             document.getElementById('questionWord').textContent = question.questionWord;
             document.getElementById('questionExample').textContent = question.example;
 
-            // Set Hint
             const hintContainer = document.getElementById('hintContainer');
             if (question.hint) {
                 hintContainer.classList.remove('hidden');
-                hintContainer.classList.add('inline-flex');
                 document.getElementById('hintText').textContent = question.hint;
             } else {
                 hintContainer.classList.add('hidden');
             }
 
-            // Shuffle Options
             const allOptions = [...question.incorrectAnswers, question.correctAnswer];
             for (let i = allOptions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [allOptions[i], allOptions[j]] = [allOptions[j], allOptions[i]];
             }
 
-            // Render Buttons
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = '';
 
             allOptions.forEach(option => {
                 const btn = document.createElement('button');
-                btn.className = `p-4 md:p-5 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex flex-col items-center justify-center gap-1 group bg-slate-50 border-slate-200 text-slate-700 hover:border-emerald-300 hover:bg-emerald-50 text-center`;
+                btn.className = `p-4 md:p-5 rounded-xl border-2 text-lg font-medium transition-all duration-200 flex flex-col items-center justify-center gap-1 bg-slate-50 border-slate-200 text-slate-700 ${theme.hover} text-center`;
                 
-                // Split bilingual string for better styling
                 const [arabic, english] = option.split(' (');
                 const englishClean = english.replace(')', '');
 
@@ -390,45 +390,39 @@
             isAnswered = true;
 
             const isCorrect = selectedOption === currentQuestion.correctAnswer;
-            const grid = document.getElementById('optionsGrid');
-            const buttons = grid.getElementsByTagName('button');
+            const buttons = document.getElementById('optionsGrid').getElementsByTagName('button');
 
-            // Helper to get text content used for comparison
             const getBtnOption = (btn) => {
                 const arb = btn.querySelector('.font-arabic').textContent;
                 const eng = btn.querySelector('.text-xs').textContent;
                 return `${arb} (${eng})`;
             };
 
-            // Update Score
             if (isCorrect) {
                 score += 10;
                 streak += 1;
-                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
+                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
             } else {
                 streak = 0;
-                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 group bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 text-center";
+                btnElement.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 text-center";
 
-                // Highlight correct one
                 for (let btn of buttons) {
                     if (getBtnOption(btn) === currentQuestion.correctAnswer) {
-                        btn.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 group bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
+                        btn.className = "p-4 md:p-5 rounded-xl border-2 text-lg font-medium flex flex-col items-center justify-center gap-1 bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
                     }
                 }
             }
 
-            // Disable all buttons
             for (let btn of buttons) {
                 btn.disabled = true;
                 if (!btn.classList.contains('bg-green-100') && !btn.classList.contains('bg-red-100')) {
-                    btn.classList.add('opacity-50');
+                    btn.classList.add('opacity-40');
                 }
             }
 
             updateScoreUI();
             showFeedback(isCorrect);
             
-            // AUTO NEXT: Wait 1 second then fetch next
             setTimeout(() => {
                 fetchQuestion();
             }, 1000);
@@ -440,13 +434,13 @@
             const explanationText = document.getElementById('explanationText');
             const correctAnswerText = document.getElementById('correctAnswerText');
             const correctAnswerSpan = document.getElementById('correctAnswerSpan');
+            const currentTheme = THEMES[currentThemeIndex];
 
             feedbackSection.classList.remove('hidden');
             feedbackSection.className = `mt-6 overflow-hidden rounded-xl animate-fade-in-up border relative ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`;
             
-            // Re-inject progress bar (needs to be redrawn to restart animation)
-            const progressBarHTML = `<div class="progress-bar"></div>`;
-            document.getElementById('autoNextProgress').innerHTML = progressBarHTML;
+            const autoNextProgress = document.getElementById('autoNextProgress');
+            autoNextProgress.innerHTML = `<div class="progress-bar" style="background-color: ${currentTheme.primary}"></div>`;
 
             if (isCorrect) {
                 feedbackTitle.className = "font-bold text-lg mb-1 flex items-center gap-2 text-green-700";
@@ -455,7 +449,6 @@
             } else {
                 feedbackTitle.className = "font-bold text-lg mb-1 flex items-center gap-2 text-red-700";
                 feedbackTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg> Not quite.`;
-                
                 correctAnswerText.classList.remove('hidden');
                 
                 const [arb, eng] = currentQuestion.correctAnswer.split(' (');
