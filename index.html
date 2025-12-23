@@ -30,6 +30,18 @@
             animation: spin 1s linear infinite;
         }
 
+        /* Falling Animation for Wrong Options */
+        @keyframes fallOut {
+            0% { transform: translateY(0) rotate(0); opacity: 1; }
+            20% { transform: translateY(-10px) rotate(-2deg); }
+            100% { transform: translateY(600px) rotate(25deg); opacity: 0; }
+        }
+        .animate-fall-out {
+            animation: fallOut 0.8s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+            pointer-events: none;
+            z-index: 0;
+        }
+
         /* Progress Bar Animation for Auto Advance */
         @keyframes progress {
             from { width: 0%; }
@@ -50,7 +62,7 @@
 }
 </script>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col text-slate-900">
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col text-slate-900 overflow-x-hidden">
 
     <!-- Main Content -->
     <main class="max-w-2xl mx-auto px-2 sm:px-4 py-8 md:py-12 flex-grow w-full flex flex-col items-center justify-center">
@@ -96,7 +108,7 @@
             </div>
 
             <!-- Question Card -->
-            <div id="questionCard" class="hidden bg-white rounded-2xl md:rounded-3xl shadow-xl overflow-hidden border border-slate-100 relative">
+            <div id="questionCard" class="hidden bg-white rounded-2xl md:rounded-3xl shadow-xl border border-slate-100 relative">
                 
                 <!-- Card Header (Dynamic Gradient) -->
                 <div id="questionHeader" class="p-5 md:p-8 text-center relative overflow-hidden transition-all duration-700 ease-in-out">
@@ -126,7 +138,7 @@
                 </div>
 
                 <!-- Card Body -->
-                <div class="p-3 md:p-6">
+                <div class="p-3 md:p-6 overflow-hidden">
                     <!-- Options Grid -->
                     <div id="optionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                         <!-- Options injected via JS -->
@@ -159,7 +171,7 @@
                                 </div>
                                 
                                 <div class="text-center text-[10px] md:text-xs text-slate-400 italic">
-                                    Next question in 1 second...
+                                    Next question in 1.5 seconds...
                                 </div>
                             </div>
                         </div>
@@ -369,7 +381,7 @@
 
             allOptions.forEach(option => {
                 const btn = document.createElement('button');
-                btn.className = `p-3 md:p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center justify-center gap-0.5 bg-slate-50 border-slate-200 text-slate-700 ${theme.hover} text-center`;
+                btn.className = `p-3 md:p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center justify-center gap-0.5 bg-slate-50 border-slate-200 text-slate-700 ${theme.hover} text-center relative z-10`;
                 
                 let arabic = '???';
                 let english = 'N/A';
@@ -382,6 +394,7 @@
                     arabic = option;
                 }
 
+                btn.setAttribute('data-full-option', option);
                 btn.innerHTML = `
                     <span class="font-arabic text-lg md:text-xl leading-relaxed">${arabic}</span>
                     <span class="text-[9px] md:text-xs font-normal opacity-60 font-sans tracking-tight">${english}</span>
@@ -397,42 +410,37 @@
             isAnswered = true;
 
             const isCorrect = selectedOption === currentQuestion.correctAnswer;
-            const buttons = document.getElementById('optionsGrid').getElementsByTagName('button');
+            const buttons = Array.from(document.getElementById('optionsGrid').getElementsByTagName('button'));
 
-            const getBtnOption = (btn) => {
-                const arb = btn.querySelector('.font-arabic').textContent;
-                const eng = btn.querySelector('.text-[9px], .text-xs').textContent;
-                return `${arb} (${eng})`;
-            };
+            // TRIGGER FALLING ANIMATION for all incorrect options
+            buttons.forEach(btn => {
+                const btnOption = btn.getAttribute('data-full-option');
+                if (btnOption !== currentQuestion.correctAnswer) {
+                    btn.classList.add('animate-fall-out');
+                } else {
+                    // Highlight the correct one
+                    btn.className = "p-3 md:p-5 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 bg-green-100 border-green-500 text-green-800 ring-2 ring-green-500 text-center relative z-20 shadow-lg scale-105 transition-all duration-300";
+                }
+            });
 
             if (isCorrect) {
                 score += 10;
                 streak += 1;
-                btnElement.className = "p-3 md:p-5 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
             } else {
                 streak = 0;
-                btnElement.className = "p-3 md:p-5 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 text-center";
-
-                for (let btn of buttons) {
-                    if (getBtnOption(btn) === currentQuestion.correctAnswer) {
-                        btn.className = "p-3 md:p-5 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500 text-center";
-                    }
-                }
+                // Specifically highlight the selected WRONG button if it was picked (it will still fall though)
+                btnElement.className = "p-3 md:p-5 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500 text-center animate-fall-out";
             }
 
-            for (let btn of buttons) {
-                btn.disabled = true;
-                if (!btn.classList.contains('bg-green-100') && !btn.classList.contains('bg-red-100')) {
-                    btn.classList.add('opacity-40');
-                }
-            }
+            buttons.forEach(btn => btn.disabled = true);
 
             updateScoreUI();
             showFeedback(isCorrect);
             
+            // Wait longer for the animation to play out
             setTimeout(() => {
                 fetchQuestion();
-            }, 1000);
+            }, 1500);
         }
 
         function showFeedback(isCorrect) {

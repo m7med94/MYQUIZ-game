@@ -45,6 +45,11 @@ const QuizGame: React.FC = () => {
     } else {
       setStreak(0);
     }
+    
+    // Auto-advance after animation
+    setTimeout(() => {
+      // Logic for automatic progression could go here
+    }, 1500);
   };
 
   if (loading && !question) {
@@ -63,6 +68,18 @@ const QuizGame: React.FC = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-1 sm:px-0">
+      <style>{`
+        @keyframes fallOut {
+          0% { transform: translateY(0) rotate(0); opacity: 1; }
+          20% { transform: translateY(-10px) rotate(-2deg); }
+          100% { transform: translateY(600px) rotate(25deg); opacity: 0; }
+        }
+        .animate-fall {
+          animation: fallOut 0.8s cubic-bezier(0.4, 0, 1, 1) forwards;
+          pointer-events: none;
+        }
+      `}</style>
+
       {/* Score Header */}
       <div className="flex justify-between items-center mb-4 md:mb-6 bg-white p-3 md:p-4 rounded-xl shadow-sm border border-slate-200">
         <div className="flex items-center gap-2 text-amber-500 font-bold text-sm md:text-base">
@@ -75,8 +92,8 @@ const QuizGame: React.FC = () => {
       </div>
 
       {/* Question Card */}
-      <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl overflow-hidden border border-slate-100 relative">
-        <div className="bg-gradient-to-br from-indigo-600 to-violet-700 p-6 md:p-10 text-center relative overflow-hidden">
+      <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl border border-slate-100 relative">
+        <div className="bg-gradient-to-br from-indigo-600 to-violet-700 p-6 md:p-10 text-center relative overflow-hidden rounded-t-2xl md:rounded-t-3xl">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_50%_120%,#fff_0%,transparent_50%)]" />
           
           <span className="inline-block px-3 py-1 bg-white/20 text-white text-[10px] md:text-xs font-semibold rounded-full backdrop-blur-sm mb-4">
@@ -95,21 +112,22 @@ const QuizGame: React.FC = () => {
           )}
         </div>
 
-        <div className="p-4 md:p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div className="p-4 md:p-8 overflow-hidden rounded-b-2xl md:rounded-b-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 relative">
             {options.map((option, idx) => {
               const isSelected = selectedAnswer === option;
               const isActualCorrect = option === question.correctAnswer;
               
-              let btnClass = "bg-slate-50 border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50";
+              let btnClass = "bg-slate-50 border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50 relative z-10";
               
               if (isAnswered) {
                 if (isActualCorrect) {
-                  btnClass = "bg-green-100 border-green-500 text-green-800 ring-1 ring-green-500";
-                } else if (isSelected) {
-                  btnClass = "bg-red-100 border-red-500 text-red-800 ring-1 ring-red-500";
+                  btnClass = "bg-green-100 border-green-500 text-green-800 ring-2 ring-green-500 z-20 shadow-lg scale-105";
                 } else {
-                  btnClass = "bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+                  btnClass = "bg-slate-50 border-slate-200 text-slate-400 opacity-50 animate-fall";
+                  if (isSelected) {
+                     btnClass = "bg-red-100 border-red-500 text-red-800 animate-fall";
+                  }
                 }
               }
 
@@ -118,7 +136,7 @@ const QuizGame: React.FC = () => {
                   key={idx}
                   onClick={() => handleAnswer(option)}
                   disabled={isAnswered}
-                  className={`p-4 md:p-6 rounded-xl border-2 text-base md:text-lg font-medium transition-all duration-200 flex items-center justify-between group ${btnClass} ${question.sourceLang === 'German' ? 'font-arabic leading-relaxed' : ''}`}
+                  className={`p-4 md:p-6 rounded-xl border-2 text-base md:text-lg font-medium transition-all duration-300 flex items-center justify-between group ${btnClass} ${question.sourceLang === 'German' ? 'font-arabic leading-relaxed' : ''}`}
                 >
                   <span className="flex-1 text-left">{option}</span>
                   {isAnswered && isActualCorrect && <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 ml-2" />}
